@@ -156,7 +156,7 @@ DateTime::Format::Builder->create_class(
 				#YYYY-Www-D 1985-W15-5
 				length => [ qw( 8 10 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year month day ) ],
+				params => [ qw( year week day ) ],
 				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
@@ -164,7 +164,7 @@ DateTime::Format::Builder->create_class(
 				#YYYY-Www 1985-W15
 				length => [ qw( 7 8 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) $/x,
-				params => [ qw( year month ) ],
+				params => [ qw( year week ) ],
 				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
@@ -172,7 +172,7 @@ DateTime::Format::Builder->create_class(
 				#YY-Www-D 85-W15-5
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year month day ) ],
+				params => [ qw( year week day ) ],
 				postprocess => [
 					\&_fix_2_digit_year,
 					\&_normalize_week,
@@ -184,7 +184,7 @@ DateTime::Format::Builder->create_class(
 				#YY-Www 85-W15
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) $/x,
-				params => [ qw( year month ) ],
+				params => [ qw( year week ) ],
 				postprocess => [
 					\&_fix_2_digit_year,
 					\&_normalize_week,
@@ -196,7 +196,7 @@ DateTime::Format::Builder->create_class(
 				#-Y-Www-D -5-W15-5
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year month day ) ],
+				params => [ qw( year week day ) ],
 				postprocess => [
 					\&_fix_1_digit_year,
 					\&_normalize_week,
@@ -208,7 +208,7 @@ DateTime::Format::Builder->create_class(
 				#-Y-Www -5-W15
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) $/x,
-				params => [ qw( year month ) ],
+				params => [ qw( year week ) ],
 				postprocess => [
 					\&_fix_1_digit_year,
 					\&_normalize_week,
@@ -220,7 +220,7 @@ DateTime::Format::Builder->create_class(
 				#-Www-D -W15-5
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - W (\d\d) -?? (\d) $/x,
-				params => [ qw( month day ) ],
+				params => [ qw( week day ) ],
 				postprocess => [
 					\&_add_year,
 					\&_normalize_week,
@@ -231,7 +231,7 @@ DateTime::Format::Builder->create_class(
 				#-Www -W15
 				length => 4,
 				regex  => qr/^ - W (\d\d) $/x,
-				params => [ qw( month ) ],
+				params => [ qw( week ) ],
 				postprocess => [
 					\&_add_year,
 					\&_normalize_week,
@@ -255,7 +255,7 @@ DateTime::Format::Builder->create_class(
 				#+[YY]YYYY-Www-D +001985-W15-5
 				length => [ qw( 11 13 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year month day ) ],
+				params => [ qw( year week day ) ],
 				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
@@ -263,7 +263,7 @@ DateTime::Format::Builder->create_class(
 				#+[YY]YYYY-Www +001985-W15
 				length => [ qw( 10 11 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) $/x,
-				params => [ qw( year month ) ],
+				params => [ qw( year week ) ],
 				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
@@ -507,7 +507,7 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 18 19 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d)
 					T (\d\d) :?? (\d\d) ([+-] \d{2,4}) $/x,
-				params => [ qw( year month day hour minute time_zone) ],
+				params => [ qw( year week day hour minute time_zone) ],
 				postprocess => [
 					\&_normalize_week,
 					\&_normalize_day,
@@ -633,7 +633,7 @@ sub _add_day {
 sub _add_week {
 	my %p = @_;
 
-	$p{ parsed }{ month } = DateTime->now->week_number;
+	$p{ parsed }{ week } = DateTime->now->week_number;
 
 	return 1;
 }
@@ -712,15 +712,15 @@ sub _normalize_week {
 		);
                                                                                 
 	if ( $dt->week_number == 1 ) {
-		$p{ parsed }{ month } -= 1;
+		$p{ parsed }{ week } -= 1;
 	}
 
-	$p{ parsed }{ month } *= 7;
-	$p{ parsed }{ month } -= $dt->day_of_week -1;
+	$p{ parsed }{ week } *= 7;
+	$p{ parsed }{ week } -= $dt->day_of_week -1;
 
-	$p{ parsed }{ day } += $p{ parsed }{ month };
+	$p{ parsed }{ day } += $p{ parsed }{ week };
 
-	delete $p{ parsed }{ month };
+	delete $p{ parsed }{ week };
 
 	return 1;
 }
