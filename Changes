@@ -1,7 +1,25 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
+0.04
+    - require DT 0.18 and DT::F::B 0.77
+    - recommend Test::Pod 0.95 and File::Find::Rule 0.24
+    - doc update
+    - test update
+    - fix bug in -YY spec
+    - default handling of 2-digit years is now 0-49 as 20xx and 50-99 as 19xx
+    - add DefaultCutOffYear()
+    - add DefaultLegacyYear()
+    - add base_datetime()
+    - add clone()
+    - add cut_off_year()
+    - add legacy_year()
+    - add new()
+    - add set_base_datetime()
+    - add set_cut_off_year()
+    - add set_legacy_year()
+
 0.03 Thu Jul  3 19:57:18 HST 2003
-    - deps updated to DT::F::B 0.75
+    - require DT::F::B 0.75
     - 'constructor' in specrefs instead of _normalize_day()
     - removed _normalize_day()
     - speed enhancement from internals cleanup
@@ -11,7 +29,7 @@ Revision history for Perl module DateTime::Format::ISO8601
     - doc update
 
 0.02 Thu Jun 26 22:44:38 HST 2003
-    - deps updated to DT 0.13 and DT::F::B 0.74
+    - require DT 0.13 and DT::F::B 0.74
     - dropped Date::ISO dep
     - length based string matching where possible
     - support '.' as a fractional time separator

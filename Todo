@@ -8,7 +8,7 @@ TODO list for Perl module DateTime::Format::ISO8601
 
 Roadmap:
 
-0.04 - many more tests/better docs
+0.05 - more tests
      - complete 5.4.2 support (recursive DT::F::Builder)
-0.05 - start ISO8601 section 5.5
-0.06 - finish section 5.5 when DT::Duration::Set is finished
+0.06 - start ISO8601 section 5.5
+0.07 - finish section 5.5 when DT::Duration::Set is finished
