@@ -1,37 +1,112 @@
 package DateTime::Format::ISO8601;
 
 use strict;
+use warnings;
 
 use vars qw( $VERSION );
 $VERSION = '0.04';
 
+use Carp qw( croak );
 use DateTime;
 use DateTime::Format::Builder;
-use Params::Validate qw( validate OBJECT );
+use Params::Validate qw( validate validate_pos OBJECT BOOLEAN );
+
+# adapted from DateTime.pm
+{
+    my $default_legacy_year;
+    sub DefaultLegacyYear {
+        my $class = shift;
+
+        $default_legacy_year = shift if @_;
+
+        return $default_legacy_year;
+    }
+}
+__PACKAGE__->DefaultLegacyYear( 1 );
 
 sub new {
     my( $class ) = shift;
 
     my %args = validate( @_,
         {
-            base_time => {
+            base_datetime => {
                 type        => OBJECT,
                 can         => 'utc_rd_values',
                 optional    => 1,
             },
+            legacy_year => {
+                type        => BOOLEAN,
+                default     => $class->DefaultLegacyYear,
+                callbacks   => {
+                    'is 0, 1, or undef' =>
+                        sub { ! defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
+                },
+            },
         }
     );
 
-    my $self;
-    if ( $args{ base_time } ) {
-        $self = { base_time => DateTime->from_object( object => $args{ base_time } ) };
-    } else {
-        $self = {};
-    }
-
     $class = ref( $class ) || $class;
 
-    return( bless( $self, $class ) );
+    my $self = bless( \%args, $class );
+
+    if ( $args{ base_datetime } ) {
+        $self->set_base_datetime( object => $args{ base_datetime } );
+    }
+
+    return( $self );
+}
+
+# lifted from DateTime
+sub clone { bless { %{ $_[0] } }, ref $_[0] }
+
+sub base_datetime { $_[0]->{ base_datetime } }
+
+sub set_base_datetime {
+    my $self = shift;
+
+    my %args = validate( @_,
+        {
+            object => {
+                type        => OBJECT,
+                can         => 'utc_rd_values',
+            },
+        }
+    );
+       
+    my $dt = DateTime->from_object( object => $args{ object } );
+    my $lower_bound = DateTime->new( year => 0 )->subtract( nanoseconds => 1 );
+    my $upper_bound = DateTime->new( year => 10000 );
+
+    if ( DateTime->compare( $dt, $lower_bound ) != 1 ) {
+        croak "base_datetime must be greater then ", $lower_bound->iso8601;
+    }
+    if ( DateTime->compare( $dt, $upper_bound ) != -1 ) {
+        croak "base_datetime must be less then ", $upper_bound->iso8601;
+    }
+
+    $self->{ base_datetime } = $dt;
+
+    return $self;
+}
+
+sub legacy_year { $_[0]->{ legacy_year } }
+
+sub set_legacy_year {
+    my $self = shift;
+
+    my @args = validate_pos( @_,
+        {
+            type        => BOOLEAN,
+            callbacks   => {
+                'is 0, 1, or undef' =>
+                    sub { ! defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
+            },
+        }
+    );
+
+    $self->{ legacy_year } = $args[0];
+
+    return $self;
 }
 
 DateTime::Format::Builder->create_class(
@@ -602,7 +677,12 @@ DateTime::Format::Builder->create_class(
 sub _fix_1_digit_year {
     my %p = @_;
      
-    $p{ parsed }{ year } =  200 . $p{ parsed }{ year };
+    no strict 'refs';
+    my $year = ( $p{ self }{ base_datetime } || DateTime->now )->year;
+    use strict;
+
+    $year =~ s/.$//;
+    $p{ parsed }{ year } =  $year . $p{ parsed }{ year };
 
     return 1;
 }
@@ -610,7 +690,20 @@ sub _fix_1_digit_year {
 sub _fix_2_digit_year {
     my %p = @_;
      
-    $p{ parsed }{ year } += $p{ parsed }{ year } <= 69 ? 2000 : 1900;
+    no strict 'refs';
+    if ( exists $p{ self }{ legacy_year } ) {
+        if ( $p{ self }{ legacy_year } ) {
+            # lifted from DateTime::Format::MySQL
+            $p{ parsed }{ year } += $p{ parsed }{ year } <= 69 ? 2000 : 1900;
+        } else {
+            my $century = ( $p{ self }{ base_datetime } || DateTime->now )->strftime( '%C' );
+            $p{ parsed }{ year } += $century * 100;
+        }
+    } else {
+        # lifted from DateTime::Format::MySQL
+        $p{ parsed }{ year } += $p{ parsed }{ year } <= 69 ? 2000 : 1900;
+    }
+    use strict;
 
     return 1;
 }
@@ -619,7 +712,7 @@ sub _add_minute {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ minute } = ( $p{ self }{ base_time } || DateTime->now )->minute;
+    $p{ parsed }{ minute } = ( $p{ self }{ base_datetime } || DateTime->now )->minute;
     use strict;
 
     return 1;
@@ -629,7 +722,7 @@ sub _add_hour {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ hour } = ( $p{ self }{ base_time } || DateTime->now )->hour;
+    $p{ parsed }{ hour } = ( $p{ self }{ base_datetime } || DateTime->now )->hour;
     use strict;
 
     return 1;
@@ -639,7 +732,7 @@ sub _add_day {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ day } = ( $p{ self }{ base_time } || DateTime->now )->day;
+    $p{ parsed }{ day } = ( $p{ self }{ base_datetime } || DateTime->now )->day;
     use strict;
 
     return 1;
@@ -649,7 +742,7 @@ sub _add_week {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ week } = ( $p{ self }{ base_time } || DateTime->now )->week;
+    $p{ parsed }{ week } = ( $p{ self }{ base_datetime } || DateTime->now )->week;
     use strict;
 
     return 1;
@@ -659,7 +752,7 @@ sub _add_month {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ month } = ( $p{ self }{ base_time } || DateTime->now )->month;
+    $p{ parsed }{ month } = ( $p{ self }{ base_datetime } || DateTime->now )->month;
     use strict;
 
     return 1;
@@ -669,7 +762,7 @@ sub _add_year {
     my %p = @_;
 
     no strict 'refs';
-    $p{ parsed }{ year } = ( $p{ self }{ base_time } || DateTime->now )->year;
+    $p{ parsed }{ year } = ( $p{ self }{ base_datetime } || DateTime->now )->year;
     use strict;
 
     return 1;
