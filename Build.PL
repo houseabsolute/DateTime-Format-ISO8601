@@ -6,7 +6,7 @@ my $build = new Module::Build
         author              => 'Joshua Hoblitt <jhoblitt@cpan.org>',
         license             => 'perl',
         requires            => {
-            DateTime                    => '0.1705',
+            DateTime                    => '0.18',
             DateTime::Format::Builder   => '0.77',
         },
         recommends          => {
