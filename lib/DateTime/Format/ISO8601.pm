@@ -3,7 +3,7 @@ package DateTime::Format::ISO8601;
 use strict;
 
 use vars qw( $VERSION );
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use DateTime;
 use DateTime::Format::Builder;
