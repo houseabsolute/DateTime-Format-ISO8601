@@ -1,6 +1,6 @@
 use strict;
 
-use Test::More qw( no_plan );
+use Test::More tests => 10765;
 
 use DateTime::Format::ISO8601;
 
