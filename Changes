@@ -1,6 +1,4 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.01 Sun Mar 30 14:18:39 2003
-	- original version; created by ExtUtils::ModuleMaker 0.31229
-
-
+0.01 Sat Jun 21 22:35:19 HST 2003
+	- support ISO8601 date/time formats
