@@ -7,6 +7,32 @@ $VERSION = '0.04';
 
 use DateTime;
 use DateTime::Format::Builder;
+use Params::Validate qw( validate OBJECT );
+
+sub new {
+	my( $class ) = shift;
+
+	my %args = validate( @_,
+		{
+            base_time => {
+				type        => OBJECT,
+                can         => 'utc_rd_values',
+				optional    => 1,
+			},
+		}
+	);
+
+    my $self;
+    if ( $args{ base_time } ) {
+        $self = { base_time => DateTime->from_object( object => $args{ base_time } ) };
+    } else {
+        $self = {};
+    }
+
+	$class = ref( $class ) || $class;
+
+	return( bless( $self, $class ) );
+}
 
 DateTime::Format::Builder->create_class(
 	parsers => {
@@ -592,7 +618,9 @@ sub _fix_2_digit_year {
 sub _add_minute {
 	my %p = @_;
 
-	$p{ parsed }{ minute } = DateTime->now->minute;
+    no strict 'refs';
+	$p{ parsed }{ minute } = ( $p{ self }{ base_time } || DateTime->now )->minute;
+    use strict;
 
 	return 1;
 }
@@ -600,7 +628,9 @@ sub _add_minute {
 sub _add_hour {
 	my %p = @_;
 
-	$p{ parsed }{ hour } = DateTime->now->hour;
+    no strict 'refs';
+	$p{ parsed }{ hour } = ( $p{ self }{ base_time } || DateTime->now )->hour;
+    use strict;
 
 	return 1;
 }
@@ -608,7 +638,9 @@ sub _add_hour {
 sub _add_day {
 	my %p = @_;
 
-	$p{ parsed }{ day } = DateTime->now->day;
+    no strict 'refs';
+	$p{ parsed }{ day } = ( $p{ self }{ base_time } || DateTime->now )->day;
+    use strict;
 
 	return 1;
 }
@@ -616,7 +648,9 @@ sub _add_day {
 sub _add_week {
 	my %p = @_;
 
-	$p{ parsed }{ week } = DateTime->now->week_number;
+    no strict 'refs';
+	$p{ parsed }{ week } = ( $p{ self }{ base_time } || DateTime->now )->week;
+    use strict;
 
 	return 1;
 }
@@ -624,7 +658,9 @@ sub _add_week {
 sub _add_month {
 	my %p = @_;
 
-	$p{ parsed }{ month } = DateTime->now->month;
+    no strict 'refs';
+	$p{ parsed }{ month } = ( $p{ self }{ base_time } || DateTime->now )->month;
+    use strict;
 
 	return 1;
 }
@@ -632,7 +668,9 @@ sub _add_month {
 sub _add_year {
 	my %p = @_;
 
-	$p{ parsed }{ year } = DateTime->now->year;
+    no strict 'refs';
+    $p{ parsed }{ year } = ( $p{ self }{ base_time } || DateTime->now )->year;
+    use strict;
 
 	return 1;
 }
