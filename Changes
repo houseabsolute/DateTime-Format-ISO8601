@@ -1,7 +1,17 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.02 Thu Thu Jun 26 22:44:38 HST 2003
-	- deps updated to DT 0.13 and DT::F:B 0.74
+0.03 Thu Jul  3 19:57:18 HST 2003
+	- deps updated to DT::F::B 0.75
+	- 'constructor' in specrefs instead of _normalize_day()
+	- removed _normalize_day()
+	- speed enhancement from internals cleanup
+	- fixed _normalize_week to properly handle week specified without a day of week
+	- fixed ISO week day tests (count from zero instead of 1 error) 
+	- ISO8601 sections 5.3.1.1 - 5.3.1.3 and 5.3.3 - 5.3.4.2 maybe prefixed with 'T'
+	- doc update
+
+0.02 Thu Jun 26 22:44:38 HST 2003
+	- deps updated to DT 0.13 and DT::F::B 0.74
 	- dropped Date::ISO dep
 	- length based string matching where possible
 	- support '.' as a fractional time separator
