@@ -7,7 +7,7 @@ my $build = new Module::Build
 		license			=> 'perl',
 		requires		=> {
 			DateTime		  => '0.13',
-			DateTime::Format::Builder => '0.74',
+			DateTime::Format::Builder => '0.75',
 		},
 	);
 $build->create_build_script;
