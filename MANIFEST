@@ -1,0 +1,12 @@
+MANIFEST
+LICENSE
+README
+Todo
+Changes
+lib/DateTime/Format/ISO8601.pm
+lib/DateTime/Format/ISO8601.pod
+t/01_load.t
+Makefile.PL
+LICENSE
+README
+Todo
