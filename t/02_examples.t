@@ -175,13 +175,13 @@ use DateTime::Format::ISO8601;
 {
 	#YYYYWww 1985W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '1985W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
 	#YYYY-Www 1985-W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '1985-W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
@@ -199,13 +199,13 @@ use DateTime::Format::ISO8601;
 {
 	#YYWww 85W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '85W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
 	#YY-Www 85-W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '85-W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
@@ -279,13 +279,13 @@ use DateTime::Format::ISO8601;
 {
 	#+[YY]YYYYWww +001985W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '+001985W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
 	#+[YY]YYYY-Www +001985-W15
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '+001985-W15' );
-	is( $dt->ymd, '1985-04-07' );
+	is( $dt->ymd, '1985-04-08' );
 }
 
 {
