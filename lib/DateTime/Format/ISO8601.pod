@@ -197,6 +197,8 @@ maybe prefixed with 'T'
 
 =head3 5.4.2
 
+Support for this section is not complete.
+
     YYYYMMDDThhmm
     YYYY-MM-DDThh:mm
     YYYYDDDThhmmZ
@@ -243,8 +245,22 @@ maybe prefixed with 'T'
     ISO/TC 154 N 362
 
 =head1 CREDITS
- 
+
+Iain "Spoon" Truskett (SPOON) who wrote C<DateTime::Format::Builder>.
+That has grown into I<The Vacuum Energy Powered C<Swiss Army> Katana> 
+of date and time parsing.  This module was inspired by and conceived
+in honor of C<DateTime::Format::Builder>.
+
+Tom Phoenix (PHOENIX) and PDX.pm for helping me solve the ISO week conversion
+bug.  Not by fixing the code but motivation me to fix it so I could
+participate in a game of C<Zendo>.
+
 Everyone at the DateTime C<Asylum>.
+
+=head1 SUPPORT
+ 
+Support for this module is provided via the datetime@perl.org email
+list. See http://lists.perl.org/ for more details.
 
 =head1 AUTHOR
  
