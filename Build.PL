@@ -7,6 +7,7 @@ my $build = new Module::Build
 		license			=> 'perl',
 		requires		=> {
 			DateTime		  => 0,
+			Date::ISO		  => '1.30',
 			DateTime::Format::Builder => '0.72',
 		},
 	);
