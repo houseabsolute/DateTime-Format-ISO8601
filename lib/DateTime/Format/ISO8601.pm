@@ -123,31 +123,33 @@ DateTime::Format::Builder->create_class(
 				#YYYY-DDD 1985-102
 				length => [ qw( 7 8 ) ],
 				regex  => qr/^ (\d{4}) -?? (\d{3}) $/x,
-				params => [ qw( year day ) ],
-				postprocess => \&_normalize_day,
+				params => [ qw( year day_of_year ) ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#YYDDD 85102
 				#YY-DDD 85-102
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ (\d\d) -?? (\d{3}) $/x,
-				params => [ qw( year day ) ],
-				postprocess => [ \&_fix_2_digit_year, \&_normalize_day ],
+				params => [ qw( year day_of_year ) ],
+				postprocess => [ \&_fix_2_digit_year ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-DDD -102
 				length => 4,
 				regex  => qr/^ - (\d{3}) $/x,
-				params => [ qw( day ) ],
-				postprocess => [ \&_add_year, \&_normalize_day ],
+				params => [ qw( day_of_year ) ],
+				postprocess => [ \&_add_year ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#+[YY]YYYYDDD +001985102
 				#+[YY]YYYY-DDD +001985-102
 				length => [ qw( 10 11 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? (\d{3}) $/x,
-				params => [ qw( year day ) ],
-				postprocess => \&_normalize_day,
+				params => [ qw( year day_of_year ) ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#YYYYWwwD 1985W155
@@ -494,9 +496,9 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 13 15 ) ],
 				regex  => qr/^ (\d{4}) -??  (\d{3}) T
 					(\d\d) :?? (\d\d) Z $/x,
-				params => [ qw( year day hour minute ) ],
+				params => [ qw( year day_of_year hour minute ) ],
 				extra  => { time_zone => 'UTC' },
-				postprocess => \&_normalize_day,
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 
 			},
 			{
