@@ -673,20 +673,6 @@ sub _normalize_offset {
 	return 1;
 }
 
-sub _normalize_day {
-	my %p = @_;
-
-	my $dt = DateTime->from_day_of_year(
-			year        => $p{ parsed }{ year },
-			day_of_year => $p{ parsed }{ day },
-	         );
-
-	$p{ parsed }{ month } = $dt->month;
-	$p{ parsed }{ day } = $dt->day;
-
-	return 1;
-}
-
 sub _normalize_week {
 	my %p = @_;
 
