@@ -255,8 +255,8 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmss 232050 - skipped
 				#hh:mm:ss 23:20:50
-				length => 8,
-				regex  => qr/^ (\d\d) : (\d\d) : (\d\d) $/x,
+				length => [ qw( 8 9 ) ],
+				regex  => qr/^ T?? (\d\d) : (\d\d) : (\d\d) $/x,
 				params => [ qw( hour minute second) ],
 				postprocess => [
 					\&_add_year,
@@ -268,8 +268,8 @@ DateTime::Format::Builder->create_class(
 				#hh 23 -skipped
 			{
 				#hh:mm 23:20
-				length => [ qw( 4 5 ) ],
-				regex  => qr/^ (\d\d) :?? (\d\d) $/x,
+				length => [ qw( 4 5 6 ) ],
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) $/x,
 				params => [ qw( hour minute ) ],
 				postprocess => [
 					\&_add_year,
@@ -280,7 +280,7 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmss,ss 232050,5
 				#hh:mm:ss,ss 23:20:50,5
-				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute second nanosecond) ],
 				postprocess => [
 					\&_add_year,
@@ -292,7 +292,7 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmm,mm 2320,8
 				#hh:mm,mm 23:20,8
-				regex  => qr/^ (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute second ) ],
 				postprocess => [
 					\&_add_year,
@@ -303,7 +303,7 @@ DateTime::Format::Builder->create_class(
 			},
 			{
 				#hh,hh 23,3
-				regex  => qr/^ (\d\d) [\.,] (\d+) $/x,
+				regex  => qr/^ T?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute ) ],
 				postprocess => [
 					\&_add_year,
@@ -368,8 +368,8 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmssZ 232030Z
 				#hh:mm:ssZ 23:20:30Z
-				length => [ qw( 7 9 ) ],
-				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d) Z $/x,
+				length => [ qw( 7 8 9 10 ) ],
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d) Z $/x,
 				params => [ qw( hour minute second ) ],
 				extra  => { time_zone => 'UTC' },
 				postprocess => [
@@ -381,8 +381,8 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmZ 2320Z
 				#hh:mmZ 23:20Z
-				length => [ qw( 5 6 ) ],
-				regex  => qr/^ (\d\d) :?? (\d\d) Z $/x,
+				length => [ qw( 5 6 7 ) ],
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) Z $/x,
 				params => [ qw( hour minute ) ],
 				extra  => { time_zone => 'UTC' },
 				postprocess => [
@@ -393,8 +393,8 @@ DateTime::Format::Builder->create_class(
 			},
 			{
 				#hhZ 23Z
-				length => 3,
-				regex  => qr/^ (\d\d) Z $/x,
+				length => [ qw( 3 4 ) ],
+				regex  => qr/^ T?? (\d\d) Z $/x,
 				params => [ qw( hour ) ],
 				extra  => { time_zone => 'UTC' },
 				postprocess => [
@@ -406,8 +406,8 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmss[+-]hhmm 152746+0100 152746-0500
 				#hh:mm:ss[+-]hh:mm 15:27:46+01:00 15:27:46-05:00
-				length => [ qw( 11 14 ) ],
-				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d)
+				length => [ qw( 11 12 14 15 ) ],
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d)
 					([+-] \d\d :?? \d\d) $/x,
 				params => [ qw( hour minute second time_zone ) ],
 				postprocess => [
@@ -420,8 +420,8 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmss[+-]hh 152746+01 152746-05
 				#hh:mm:ss[+-]hh 15:27:46+01 15:27:46-05
-				length => [ qw( 9 11 ) ],
-				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d)
+				length => [ qw( 9 10 11 12 ) ],
+				regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d)
 					([+-] \d\d) $/x,
 				params => [ qw( hour minute second time_zone ) ],
 				postprocess => [
@@ -501,8 +501,8 @@ DateTime::Format::Builder->create_class(
 		parse_time => [
 			{
                                 #hhmmss 232050
-				length => 6,
-				regex => qr/^ (\d\d) (\d\d) (\d\d) $/x,
+				length => [ qw( 6 7 ) ],
+				regex => qr/^ T?? (\d\d) (\d\d) (\d\d) $/x,
 				params => [ qw( hour minute second ) ],
 				postprocess => [
 					\&_add_year,
@@ -512,8 +512,8 @@ DateTime::Format::Builder->create_class(
 			},
 			{
                                 #hhmm 2320
-				length => 4,
-				regex  => qr/^ (\d\d) (\d\d) $/x,
+				length => [ qw( 4 5 ) ],
+				regex  => qr/^ T?? (\d\d) (\d\d) $/x,
 				params => [ qw( hour minute ) ],
 				postprocess => [
 					\&_add_year,
@@ -523,8 +523,8 @@ DateTime::Format::Builder->create_class(
 			},
 			{
                                 #hh 23
-				length => 2,
-				regex  => qr/^ (\d\d) $/x,
+				length => [ qw( 2 3 ) ],
+				regex  => qr/^ T?? (\d\d) $/x,
 				params => [ qw( hour ) ],
 				postprocess => [
 					\&_add_year,
