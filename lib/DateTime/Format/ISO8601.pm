@@ -17,7 +17,15 @@ use Params::Validate qw( validate validate_pos OBJECT BOOLEAN );
     sub DefaultLegacyYear {
         my $class = shift;
 
-        $default_legacy_year = shift if @_;
+        ( $default_legacy_year ) = validate_pos( @_,
+            {
+                type        => BOOLEAN,
+                callbacks   => {
+                    'is 0, 1, or undef' =>
+                        sub { ! defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
+                },
+            }
+        ) if @_;
 
         return $default_legacy_year;
     }
