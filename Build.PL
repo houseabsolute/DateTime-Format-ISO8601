@@ -8,7 +8,7 @@ my $build = new Module::Build
 		requires		=> {
 			DateTime		  => 0,
 			Date::ISO		  => '1.30',
-			DateTime::Format::Builder => '0.72',
+			DateTime::Format::Builder => '0.74',
 		},
 	);
 $build->create_build_script;
