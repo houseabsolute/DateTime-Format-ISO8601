@@ -9,6 +9,7 @@ lib/DateTime/Format/ISO8601.pod
 t/01_load.t
 t/02_examples.t
 Makefile.PL
+META.yml
 LICENSE
 README
 Todo
