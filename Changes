@@ -1,11 +1,12 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.02 Thu Jun 26 21:25:07 HST 2003
+0.02 Thu Thu Jun 26 22:44:38 HST 2003
 	- deps updated to DT 0.13 and DT::F:B 0.74
 	- dropped Date::ISO dep
 	- length based string matching where possible
 	- support '.' as a fractional time separator
 	- slightly better docs
+	- bug fix for _add_minute()
 
 0.01 Sat Jun 21 22:35:19 HST 2003
 	- support ISO8601 date/time formats
