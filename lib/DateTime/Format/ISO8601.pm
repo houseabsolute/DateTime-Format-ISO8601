@@ -685,7 +685,10 @@ sub _normalize_week {
 	}
 
 	$p{ parsed }{ week } *= 7;
-	$p{ parsed }{ week } -= $dt->day_of_week -1;
+
+	if( defined $p{ parsed }{ day_of_year } ) {
+		$p{ parsed }{ week } -= $dt->day_of_week -1;
+	}
 
 	$p{ parsed }{ day_of_year } += $p{ parsed }{ week };
 
