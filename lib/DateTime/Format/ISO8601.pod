@@ -377,7 +377,7 @@ optionally prefixed with 'T'
 
 =head1 CREDITS
 
-Iain 'Spoon' Truskett (SPOON) who wrote C<DateTime::Format::Builder>.
+Iain 'Spoon' Truskett (SPOON) who wrote L<DateTime::Format::Builder>.
 That has grown into I<The Vacuum Energy Powered C<Swiss Army> Katana> 
 of date and time parsing.  This module was inspired by and conceived
 in honor of Iain's work.
