@@ -607,7 +607,7 @@ sub _fix_2_digit_year {
 sub _add_minute {
 	my %p = @_;
 
-	$p{ parsed }{ hour } = DateTime->now->minute;
+	$p{ parsed }{ minute } = DateTime->now->minute;
 
 	return 1;
 }
