@@ -6,7 +6,6 @@ use vars qw( $VERSION );
 $VERSION = '0.01';
 
 use DateTime;
-use Date::ISO ();
 use DateTime::Format::Builder;
 
 DateTime::Format::Builder->create_class(
@@ -156,7 +155,7 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 8 10 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d) $/x,
 				params => [ qw( year month day ) ],
-				postprocess => \&_normalize_week,
+				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
 				#YYYYWww 1985W15
@@ -164,7 +163,7 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 7 8 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) $/x,
 				params => [ qw( year month ) ],
-				postprocess => \&_normalize_week,
+				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
 				#YYWwwD 85W155
@@ -172,7 +171,11 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
 				params => [ qw( year month day ) ],
-				postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+				postprocess => [
+					\&_fix_2_digit_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#YYWww 85W15
@@ -180,7 +183,11 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) $/x,
 				params => [ qw( year month ) ],
-				postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+				postprocess => [
+					\&_fix_2_digit_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#-YWwwD -5W155
@@ -188,7 +195,11 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
 				params => [ qw( year month day ) ],
-				postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+				postprocess => [
+					\&_fix_1_digit_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#-YWww -5W15
@@ -196,7 +207,11 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) $/x,
 				params => [ qw( year month ) ],
-				postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+				postprocess => [
+					\&_fix_1_digit_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#-WwwD -W155
@@ -204,14 +219,22 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - W (\d\d) -?? (\d) $/x,
 				params => [ qw( month day ) ],
-				postprocess => [ \&_add_year, \&_normalize_week ],
+				postprocess => [
+					\&_add_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#-Www -W15
 				length => 4,
 				regex  => qr/^ - W (\d\d) $/x,
 				params => [ qw( month ) ],
-				postprocess => [ \&_add_year, \&_normalize_week ],
+				postprocess => [
+					\&_add_year,
+					\&_normalize_week,
+					\&_normalize_day,
+				],
 			},
 			{
 				#-W-D -W-5
@@ -221,7 +244,8 @@ DateTime::Format::Builder->create_class(
 				postprocess => [
 					\&_add_year,
 					\&_add_week,
-					\&_normalize_week
+					\&_normalize_week,
+					\&_normalize_day,
 				],
 			},
 			{
@@ -230,7 +254,7 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 11 13 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) -?? (\d) $/x,
 				params => [ qw( year month day ) ],
-				postprocess => \&_normalize_week,
+				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
 				#+[YY]YYYYWww +001985W15
@@ -238,7 +262,7 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 10 11 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) $/x,
 				params => [ qw( year month ) ],
-				postprocess => \&_normalize_week,
+				postprocess => [ \&_normalize_week, \&_normalize_day ],
 			},
 			{
 				#hhmmss 232050 - skipped
@@ -268,7 +292,7 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmmss,ss 232050,5
 				#hh:mm:ss,ss 23:20:50,5
-				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d) , (\d+) $/x,
+				regex  => qr/^ (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute second nanosecond) ],
 				postprocess => [
 					\&_add_year,
@@ -280,7 +304,7 @@ DateTime::Format::Builder->create_class(
 			{
 				#hhmm,mm 2320,8
 				#hh:mm,mm 23:20,8
-				regex  => qr/^ (\d\d) :?? (\d\d) , (\d+) $/x,
+				regex  => qr/^ (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute second ) ],
 				postprocess => [
 					\&_add_year,
@@ -291,7 +315,7 @@ DateTime::Format::Builder->create_class(
 			},
 			{
 				#hh,hh 23,3
-				regex  => qr/^ (\d\d) , (\d+) $/x,
+				regex  => qr/^ (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( hour minute ) ],
 				postprocess => [
 					\&_add_year,
@@ -318,7 +342,7 @@ DateTime::Format::Builder->create_class(
 			{
 				#-mmss,s -2050,5
 				#-mm:ss,s -20:50,5
-				regex  => qr/^ - (\d\d) :?? (\d\d) , (\d+) $/x,
+				regex  => qr/^ - (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( minute second nanosecond ) ],
 				postprocess => [
 					\&_add_year,
@@ -330,7 +354,7 @@ DateTime::Format::Builder->create_class(
 			},
 			{
 				#-mm,m -20,8
-				regex  => qr/^ - (\d\d) , (\d+) $/x,
+				regex  => qr/^ - (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( minute second ) ],
 				postprocess => [
 					\&_add_year,
@@ -342,7 +366,7 @@ DateTime::Format::Builder->create_class(
 			},
 			{
 				#--ss,s --50,5
-				regex  => qr/^ -- (\d\d) , (\d+) $/x,
+				regex  => qr/^ -- (\d\d) [\.,] (\d+) $/x,
 				params => [ qw( second nanosecond) ],
 				postprocess => [
 					\&_add_year,
@@ -482,7 +506,11 @@ DateTime::Format::Builder->create_class(
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d)
 					T (\d\d) :?? (\d\d) ([+-] \d{2,4}) $/x,
 				params => [ qw( year month day hour minute time_zone) ],
-				postprocess => [ \&_normalize_week, \&_normalize_offset ],
+				postprocess => [
+					\&_normalize_week,
+					\&_normalize_day,
+					\&_normalize_offset,
+				],
 			},
 		],
 		parse_time => [
@@ -677,15 +705,20 @@ sub _normalize_day {
 sub _normalize_week {
 	my %p = @_;
 
-	(
-		$p{ parsed }{ year },
-		$p{ parsed }{ month },
-		$p{ parsed }{ day },
-	) = Date::ISO::from_iso(
-		$p{ parsed }{ year },
-		$p{ parsed }{ month },
-		$p{ parsed }{ day }
-	);
+	my $dt = DateTime->new(
+			year => $p{ parsed }{ year },
+		);
+                                                                                
+	if ( $dt->week_number == 1 ) {
+		$p{ parsed }{ month } -= 1;
+	}
+
+	$p{ parsed }{ month } *= 7;
+	$p{ parsed }{ month } -= $dt->day_of_week -1;
+
+	$p{ parsed }{ day } += $p{ parsed }{ month };
+
+	delete $p{ parsed }{ month };
 
 	return 1;
 }
