@@ -1,13 +1,14 @@
 DateTime::Format::ISO8601
 ========================
 
-Parses ISO8601 formats.
+Parses almost all ISO8601 date and time formats.
+ISO8601 time-intervals will be supported in a later release.
 
 INSTALLATION
-
+  
 To install this module type the following:
-
-perl Makefile.PL
-make
-make test
-make install
+  
+perl Build.PL
+./Build
+./Build test
+./Build install
