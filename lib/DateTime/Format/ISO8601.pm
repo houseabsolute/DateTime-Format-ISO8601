@@ -156,8 +156,9 @@ DateTime::Format::Builder->create_class(
 				#YYYY-Www-D 1985-W15-5
 				length => [ qw( 8 10 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year week day ) ],
-				postprocess => [ \&_normalize_week, \&_normalize_day ],
+				params => [ qw( year week day_of_year ) ],
+				postprocess => [ \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#YYYYWww 1985W15
@@ -165,19 +166,17 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 7 8 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) $/x,
 				params => [ qw( year week ) ],
-				postprocess => [ \&_normalize_week, \&_normalize_day ],
+				postprocess => [ \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#YYWwwD 85W155
 				#YY-Www-D 85-W15-5
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year week day ) ],
-				postprocess => [
-					\&_fix_2_digit_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				params => [ qw( year week day_of_year ) ],
+				postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#YYWww 85W15
@@ -185,23 +184,17 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ (\d\d) -?? W (\d\d) $/x,
 				params => [ qw( year week ) ],
-				postprocess => [
-					\&_fix_2_digit_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-YWwwD -5W155
 				#-Y-Www-D -5-W15-5
 				length => [ qw( 6 8 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year week day ) ],
-				postprocess => [
-					\&_fix_1_digit_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				params => [ qw( year week day_of_year ) ],
+				postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-YWww -5W15
@@ -209,54 +202,46 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - (\d) -?? W (\d\d) $/x,
 				params => [ qw( year week ) ],
-				postprocess => [
-					\&_fix_1_digit_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-WwwD -W155
 				#-Www-D -W15-5
 				length => [ qw( 5 6 ) ],
 				regex  => qr/^ - W (\d\d) -?? (\d) $/x,
-				params => [ qw( week day ) ],
-				postprocess => [
-					\&_add_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				params => [ qw( week day_of_year ) ],
+				postprocess => [ \&_add_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-Www -W15
 				length => 4,
 				regex  => qr/^ - W (\d\d) $/x,
 				params => [ qw( week ) ],
-				postprocess => [
-					\&_add_year,
-					\&_normalize_week,
-					\&_normalize_day,
-				],
+				postprocess => [ \&_add_year, \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#-W-D -W-5
 				length => 4,
 				regex  => qr/^ - W - (\d) $/x,
-				params => [ qw( day ) ],
+				params => [ qw( day_of_year ) ],
 				postprocess => [
 					\&_add_year,
 					\&_add_week,
 					\&_normalize_week,
-					\&_normalize_day,
 				],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#+[YY]YYYYWwwD +001985W155
 				#+[YY]YYYY-Www-D +001985-W15-5
 				length => [ qw( 11 13 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) -?? (\d) $/x,
-				params => [ qw( year week day ) ],
-				postprocess => [ \&_normalize_week, \&_normalize_day ],
+				params => [ qw( year week day_of_year ) ],
+				postprocess => [ \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#+[YY]YYYYWww +001985W15
@@ -264,7 +249,8 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 10 11 ) ],
 				regex  => qr/^ \+ (\d{6}) -?? W (\d\d) $/x,
 				params => [ qw( year week ) ],
-				postprocess => [ \&_normalize_week, \&_normalize_day ],
+				postprocess => [ \&_normalize_week ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 			{
 				#hhmmss 232050 - skipped
@@ -507,12 +493,9 @@ DateTime::Format::Builder->create_class(
 				length => [ qw( 18 19 ) ],
 				regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d)
 					T (\d\d) :?? (\d\d) ([+-] \d{2,4}) $/x,
-				params => [ qw( year week day hour minute time_zone) ],
-				postprocess => [
-					\&_normalize_week,
-					\&_normalize_day,
-					\&_normalize_offset,
-				],
+				params => [ qw( year week day_of_year hour minute time_zone) ],
+				postprocess => [ \&_normalize_week, \&_normalize_offset ],
+				constructor => [ 'DateTime', 'from_day_of_year' ],
 			},
 		],
 		parse_time => [
@@ -718,7 +701,7 @@ sub _normalize_week {
 	$p{ parsed }{ week } *= 7;
 	$p{ parsed }{ week } -= $dt->day_of_week -1;
 
-	$p{ parsed }{ day } += $p{ parsed }{ week };
+	$p{ parsed }{ day_of_year } += $p{ parsed }{ week };
 
 	delete $p{ parsed }{ week };
 
