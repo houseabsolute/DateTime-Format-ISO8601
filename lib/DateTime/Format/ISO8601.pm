@@ -167,7 +167,6 @@ DateTime::Format::Builder->create_class(
                 #-YY -85
                 length   => 3,
                 regex    => qr/^ - (\d\d) $/x,
-                on_match => \&fix_year,
                 params   => [ qw( year ) ],
                 postprocess => \&_fix_2_digit_year,
             },
