@@ -12,11 +12,11 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 =head1 DESCRIPTION
 
-Parses almost all ISO8601 formats.
+Parses almost all ISO8601 date and time formats.
 
-=head1 SUPPORTED FORMATS
+=head1 FORMATS
 
-A couple of time only formats were not included in parse_datetime due to parsing difficulties.  The plan is for parse_datetime to parse all possible (in one parser) formats.  parse_date to do all date only formats and parse_time to do all time only formats.
+There are 6 string that can match against date only or time only formats.   The C<parse_datetime> method will attempt to match these ambiguous strings against date only formats.  If you want to match against the time only formats see the C<parse_time> method.
 
 =head2 Conventions
 
@@ -29,6 +29,10 @@ These formats are support with exactly 6 digits for the year.
 =item * Precision
 
 If a format doesn't include full precision all larger time unit values are filled in using the current date/time.
+
+=item * Fractional time
+
+There is no limit on the expressed precision.
 
 =back
 
@@ -128,7 +132,7 @@ If a format doesn't include full precision all larger time unit values are fille
 =head1 CREDITS
  
 Everyone at the DateTime C<Asylum>.
-                                                                                                                                         
+
 =head1 AUTHOR
  
 Joshua Hoblitt <jhoblitt@cpan.org>
