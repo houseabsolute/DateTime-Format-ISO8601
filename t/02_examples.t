@@ -61,6 +61,12 @@ use DateTime::Format::ISO8601;
 }
 
 {
+    #-YY -85
+	my $dt = DateTime::Format::ISO8601->parse_datetime( '-85' );
+	is( $dt->year, '1985' );
+}
+
+{
 	#--MMDD --0412
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '--0412' );
 	my $year = DateTime->now->year;
