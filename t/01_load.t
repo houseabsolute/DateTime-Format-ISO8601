@@ -1,6 +1,6 @@
-use Test::More tests => 2;
-
 use strict;
+
+use Test::More tests => 2;
 
 BEGIN { use_ok( 'DateTime::Format::ISO8601' ); }
 
