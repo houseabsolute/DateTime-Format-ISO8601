@@ -6,9 +6,13 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 =head1 SYNOPSIS
 
-  use DateTime::Format::ISO8601;
+    use DateTime::Format::ISO8601;
 
-  my $dt = DateTime::Format::ISO8601->parse_datetime( $str );
+    my $dt = DateTime::Format::ISO8601->parse_datetime( $str );
+
+    or
+
+    my $dt = DateTime::Format::ISO8601->parse_time( $str );
 
 =head1 DESCRIPTION
 
