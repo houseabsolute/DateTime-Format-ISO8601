@@ -16,8 +16,8 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 =head1 DESCRIPTION
 
-Parses almost all ISO 8601:2000(E) date and time formats.
-ISO 8601:2000(E) time-intervals will be supported in a later release.
+Parses almost all ISO8601 date and time formats.
+ISO8601 time-intervals will be supported in a later release.
 
 =head1 FORMATS
 
@@ -133,7 +133,7 @@ which they appear.
 
 =head3 5.3.1.1 - 5.3.1.3
 
-maybe prefixed with 'T'
+optionally prefixed with 'T'
 
 =head3 5.3.1.1
 
@@ -165,7 +165,7 @@ fractional (decimal) separator maybe either ',' or '.'
 
 =head3 5.3.3 - 5.3.4.2
 
-maybe prefixed with 'T'
+optionally prefixed with 'T'
 
 =head3 5.3.3
 
@@ -214,7 +214,7 @@ Will be supported in a later release.
 
 =head3 5.3.1.1 - 5.3.1.3
 
-maybe prefixed with 'T'
+optionally prefixed with 'T'
 
 =head3 5.3.1.1
 
@@ -246,10 +246,10 @@ maybe prefixed with 'T'
 
 =head1 CREDITS
 
-Iain "Spoon" Truskett (SPOON) who wrote C<DateTime::Format::Builder>.
+Iain 'Spoon' Truskett (SPOON) who wrote C<DateTime::Format::Builder>.
 That has grown into I<The Vacuum Energy Powered C<Swiss Army> Katana> 
 of date and time parsing.  This module was inspired by and conceived
-in honor of C<DateTime::Format::Builder>.
+in honor of Iain's work.
 
 Tom Phoenix (PHOENIX) and PDX.pm for helping me solve the ISO week conversion
 bug.  Not by fixing the code but motivation me to fix it so I could
