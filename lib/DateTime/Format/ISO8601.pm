@@ -9,7 +9,7 @@ $VERSION = '0.04';
 use Carp qw( croak );
 use DateTime;
 use DateTime::Format::Builder;
-use Params::Validate qw( validate validate_pos OBJECT BOOLEAN );
+use Params::Validate qw( validate validate_pos BOOLEAN OBJECT SCALAR );
 
 # adapted from DateTime.pm
 {
@@ -32,6 +32,26 @@ use Params::Validate qw( validate validate_pos OBJECT BOOLEAN );
 }
 __PACKAGE__->DefaultLegacyYear( 1 );
 
+{
+    my $default_cut_off_year;
+    sub DefaultCutOffYear {
+        my $class = shift;
+
+        ( $default_cut_off_year ) = validate_pos( @_,
+            {
+                type        => SCALAR,
+                callbacks   => {
+                    'is between 0 and 99' =>
+                        sub { $_[0] >= 0 && $_[0] <= 99 },
+                },
+            }
+        ) if @_;
+
+        return $default_cut_off_year;
+    }
+}
+__PACKAGE__->DefaultCutOffYear( 49 );
+
 sub new {
     my( $class ) = shift;
 
@@ -48,6 +68,14 @@ sub new {
                 callbacks   => {
                     'is 0, 1, or undef' =>
                         sub { ! defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
+                },
+            },
+            cut_off_year => {
+                type        => SCALAR,
+                default     => $class->DefaultCutOffYear,
+                callbacks   => {
+                    'is between 0 and 99' =>
+                        sub { $_[0] >= 0 && $_[0] <= 99 },
                 },
             },
         }
@@ -113,6 +141,26 @@ sub set_legacy_year {
     );
 
     $self->{ legacy_year } = $args[0];
+
+    return $self;
+}
+
+sub cut_off_year { $_[0]->{ cut_off_year } }
+
+sub set_cut_off_year {
+    my $self = shift;
+
+    my @args = validate_pos( @_,
+        {
+            type        => SCALAR,
+            callbacks   => {
+                'is between 0 and 99' =>
+                    sub { $_[0] >= 0 && $_[0] <= 99 },
+            },
+        }
+    );
+
+    $self->{ cut_off_year } = $args[0];
 
     return $self;
 }
@@ -700,15 +748,17 @@ sub _fix_2_digit_year {
     no strict 'refs';
     if ( exists $p{ self }{ legacy_year } ) {
         if ( $p{ self }{ legacy_year } ) {
-            # lifted from DateTime::Format::MySQL
-            $p{ parsed }{ year } += $p{ parsed }{ year } <= 69 ? 2000 : 1900;
+            my $cutoff = exists $p{ self }{ cut_off_year }
+                ? $p{ self }{ cut_off_year } : $p{ self }->DefaultCutOffYear;
+            $p{ parsed }{ year } += $p{ parsed }{ year } > $cutoff ? 1900 : 2000;
         } else {
             my $century = ( $p{ self }{ base_datetime } || DateTime->now )->strftime( '%C' );
             $p{ parsed }{ year } += $century * 100;
         }
     } else {
-        # lifted from DateTime::Format::MySQL
-        $p{ parsed }{ year } += $p{ parsed }{ year } <= 69 ? 2000 : 1900;
+        my $cutoff = exists $p{ self }{ cut_off_year }
+            ? $p{ self }{ cut_off_year } : $p{ self }->DefaultCutOffYear;
+        $p{ parsed }{ year } += $p{ parsed }{ year } > $cutoff ? 1900 : 2000;
     }
     use strict;
 
