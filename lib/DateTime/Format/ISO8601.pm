@@ -11,7 +11,6 @@ use DateTime;
 use DateTime::Format::Builder;
 use Params::Validate qw( validate validate_pos BOOLEAN OBJECT SCALAR );
 
-# adapted from DateTime.pm
 {
     my $default_legacy_year;
     sub DefaultLegacyYear {
@@ -50,6 +49,7 @@ __PACKAGE__->DefaultLegacyYear( 1 );
         return $default_cut_off_year;
     }
 }
+# the same default value as DT::F::Mail
 __PACKAGE__->DefaultCutOffYear( 49 );
 
 sub new {
@@ -109,6 +109,8 @@ sub set_base_datetime {
         }
     );
        
+    # ISO8601 only allows years 0 to 9999
+    # this implimentation ignores the needs of expanded formats
     my $dt = DateTime->from_object( object => $args{ object } );
     my $lower_bound = DateTime->new( year => 0 )->subtract( nanoseconds => 1 );
     my $upper_bound = DateTime->new( year => 10000 );
@@ -745,6 +747,8 @@ sub _fix_1_digit_year {
 sub _fix_2_digit_year {
     my %p = @_;
      
+    # this is a mess because of the need to support parse_* being called
+    # as a class method
     no strict 'refs';
     if ( exists $p{ self }{ legacy_year } ) {
         if ( $p{ self }{ legacy_year } ) {
@@ -863,6 +867,16 @@ sub _normalize_offset {
 
 sub _normalize_week {
     my %p = @_;
+
+    # from section 4.3.2.2
+    # "A calendar week is identified within a calendar year by the calendar
+    # week number. This is its ordinal position within the year, applying the
+    # rule that the first calendar week of a year is the one that includes the
+    # first Thursday of that year and that the last calendar week of a
+    # calendar year is the week immediately preceding the first calendar week
+    # of the next calendar year."
+
+    # this make it oh so fun to covert an ISO week number to a count of days
 
     my $dt = DateTime->new(
                 year => $p{ parsed }{ year },
