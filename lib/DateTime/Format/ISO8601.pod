@@ -1,46 +1,151 @@
+=pod
+
 =head1 NAME
 
-DateTime::Format::ISO8601 - 
+DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 =head1 SYNOPSIS
 
-  use DateTime::Format::ISO8601
-  blah blah blah
+  use DateTime::Format::ISO8601;
 
+  my $dt = DateTime::Format::ISO8601->parse_datetime( $str );
 
 =head1 DESCRIPTION
 
-Stub documentation for this module was created by ExtUtils::ModuleMaker.
-It looks like the author of the extension was negligent enough
-to leave the stub unedited.
+Parses almost all ISO8601 formats.
 
-=head1 USAGE
+=head1 SUPPORTED FORMATS
 
+A couple of time only formats were not included in parse_datetime due to parsing difficulties.  The plan is for parse_datetime to parse all possible (in one parser) formats.  parse_date to do all date only formats and parse_time to do all time only formats.
 
-=head1 BUGS
+=head2 Conventions
 
+=over 4
 
-=head1 SUPPORT
+=item * Expanded ISO8601
 
+These formats are support with exactly 6 digits for the year.
 
+=item * Precision
 
+If a format doesn't include full precision all larger time unit values are filled in using the current date/time.
+
+=back
+
+=head2 Supported via parse_datetime
+
+    YYYYMMDD
+    YYYY-MM-DD
+    YYYY-MM
+    YYYY
+    YY
+    YYMMDD
+    YY-MM-DD
+    -YYMM
+    -YY-MM
+    -YY
+    --MMDD
+    --MM-DD
+    --MM
+    ---DD
+    +[YY]YYYYMMDD
+    +[YY]YYYY-MM-DD
+    +[YY]YYYY-MM
+    +[YY]YYYY
+    +[YY]YY
+    YYYYDDD
+    YYYY-DDD
+    YYDDD
+    YY-DDD
+    -DDD
+    +[YY]YYYYDDD
+    +[YY]YYYY-DDD
+    YYYYWwwD
+    YYYY-Www-D
+    YYYYWww
+    YYYY-Www
+    YYWwwD
+    YY-Www-D
+    YYWww
+    YY-Www
+    -YWwwD
+    -Y-Www-D
+    -YWww
+    -Y-Www
+    -WwwD
+    -Www-D
+    -Www
+    -W-D
+    +[YY]YYYYWwwD
+    +[YY]YYYY-Www-D
+    +[YY]YYYYWww
+    +[YY]YYYY-Www
+    hh:mm:ss
+    hh:mm
+    hhmmss,ss
+    hh:mm:ss,ss
+    hhmm,mm
+    hh:mm,mm
+    hh,hh
+    -mm:ss
+    -mmss,s
+    -mm:ss,s
+    -mm,m
+    --ss,s
+    hhmmssZ
+    hh:mm:ssZ
+    hhmmZ
+    hh:mmZ
+    hhZ
+    hhmmss[+-]hhmm
+    hh:mm:ss[+-]hh:mm
+    hhmmss[+-]hh
+    hh:mm:ss[+-]hh
+    YYYYMMDDThhmmss
+    YYYY-MM-DDThh:mm:ss
+    YYYYMMDDThhmmssZ
+    YYYY-MM-DDThh:mm:ssZ
+    YYYYMMDDThhmmss[+-]hhmm
+    YYYY-MM-DDThh:mm:ss[+-]hh:mm
+    YYYYMMDDThhmmss[+-]hh
+    YYYY-MM-DDThh:mm:ss[+-]hh
+    YYYYMMDDThhmm
+    YYYY-MM-DDThh:mm
+    YYYYDDDThhmmZ
+    YYYY-DDDThh:mmZ
+    YYYYWwwDThhmm[+-]hhmm
+    YYYY-Www-DThh:mm[+-]hh
+
+=head2 Supported via parse_time
+
+    hhmmss
+    hhmm
+    hh
+    -mmss
+    -mm
+    --ss
+
+=head1 CREDITS
+ 
+Everyone at the DateTime C<Asylum>.
+                                                                                                                                         
 =head1 AUTHOR
-
-	A. U. Thor
-	a.u.thor@a.galaxy.far.far.away
-	http://a.galaxy.far.far.away/modules
-
+ 
+Joshua Hoblitt <jhoblitt@cpan.org>
+ 
 =head1 COPYRIGHT
-
-This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
-
-The full text of the license can be found in the
-LICENSE file included with this module.
-
-
+ 
+Copyright (c) 2003 Joshua Hoblitt.  All rights reserved.  This program
+is free software; you can redistribute it and/or modify it under the
+same terms as Perl itself.
+ 
+The full text of the license can be found in the LICENSE file included
+with this module.
+ 
 =head1 SEE ALSO
-
-perl(1).
-
+ 
+datetime@perl.org mailing list
+ 
+http://datetime.perl.org/
+ 
 =cut
