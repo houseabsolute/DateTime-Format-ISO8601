@@ -1,5 +1,7 @@
 use Test::More qw( no_plan );
 
+use strict;
+
 use DateTime::Format::ISO8601;
 
 # parse_datetime
