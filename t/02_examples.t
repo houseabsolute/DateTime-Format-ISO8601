@@ -365,7 +365,7 @@ use DateTime::Format::ISO8601;
 {
 	#--ss,s --50,5
 	my $dt = DateTime::Format::ISO8601->parse_datetime( '--50,5' );
-	is( $dt->second, '50' ); #aaa
+	is( $dt->second, '50' );
 	is( $dt->nanosecond, 500_000_000 );
 }
 
