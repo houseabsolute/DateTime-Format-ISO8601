@@ -16,11 +16,15 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 =head1 DESCRIPTION
 
-Parses almost all ISO8601 date and time formats.
+Parses almost all ISO 8601:2000(E) date and time formats.
+ISO 8601:2000(E) time-intervals will be supported in a later release.
 
 =head1 FORMATS
 
-There are 6 string that can match against date only or time only formats.   The C<parse_datetime> method will attempt to match these ambiguous strings against date only formats.  If you want to match against the time only formats see the C<parse_time> method.
+There are 6 string that can match against date only or time only formats.
+The C<parse_datetime> method will attempt to match these ambiguous strings
+against date only formats.  If you want to match against the time only
+formats see the C<parse_time> method.
 
 =head2 Conventions
 
@@ -28,11 +32,13 @@ There are 6 string that can match against date only or time only formats.   The 
 
 =item * Expanded ISO8601
 
-These formats are support with exactly 6 digits for the year.
+These formats are supported with exactly 6 digits for the year.
+Support for a variable number of digits will be in a later release.
 
 =item * Precision
 
-If a format doesn't include full precision all larger time unit values are filled in using the current date/time.
+If a format doesn't include full precision all larger time unit values
+are filled in using the current date/time.
 
 =item * Fractional time
 
@@ -42,11 +48,24 @@ There is no limit on the expressed precision.
 
 =head2 Supported via parse_datetime
 
+The supported formats are listed by the section of ISO 8601:2000(E) in
+which they appear.
+
+=head3 5.2 Dates
+
+=head3 5.2.1.1
+
     YYYYMMDD
     YYYY-MM-DD
+
+=head3 5.2.1.2
+
     YYYY-MM
     YYYY
     YY
+
+=head3 5.2.1.3
+
     YYMMDD
     YY-MM-DD
     -YYMM
@@ -56,20 +75,38 @@ There is no limit on the expressed precision.
     --MM-DD
     --MM
     ---DD
+
+=head3 5.2.1.4
+
     +[YY]YYYYMMDD
     +[YY]YYYY-MM-DD
     +[YY]YYYY-MM
     +[YY]YYYY
     +[YY]YY
+
+=head3 5.2.2.1
+
     YYYYDDD
     YYYY-DDD
+
+=head3 5.2.2.2
+
     YYDDD
     YY-DDD
     -DDD
+
+=head3 5.2.2.3
+
     +[YY]YYYYDDD
     +[YY]YYYY-DDD
+
+=head3 5.3.2.1
+
     YYYYWwwD
     YYYY-Www-D
+
+=head3 5.2.3.2
+
     YYYYWww
     YYYY-Www
     YYWwwD
@@ -84,31 +121,71 @@ There is no limit on the expressed precision.
     -Www-D
     -Www
     -W-D
+
+=head3 5.2.3.4
+
     +[YY]YYYYWwwD
     +[YY]YYYY-Www-D
     +[YY]YYYYWww
     +[YY]YYYY-Www
+
+=head3 5.3 Time of Day
+
+=head3 5.3.1.1 - 5.3.1.3
+
+maybe prefixed with 'T'
+
+=head3 5.3.1.1
+
     hh:mm:ss
+
+=head3 5.3.1.2
+
     hh:mm
+
+=head3 5.3.1.3 - 5.3.1.4
+
+fractional (decimal) separator maybe either ',' or '.'
+
+=head3 5.3.1.3
+
     hhmmss,ss
     hh:mm:ss,ss
     hhmm,mm
     hh:mm,mm
     hh,hh
+
+=head3 5.3.1.4
+
     -mm:ss
     -mmss,s
     -mm:ss,s
     -mm,m
     --ss,s
+
+=head3 5.3.3 - 5.3.4.2
+
+maybe prefixed with 'T'
+
+=head3 5.3.3
+
     hhmmssZ
     hh:mm:ssZ
     hhmmZ
     hh:mmZ
     hhZ
+
+=head3 5.3.4.2
+
     hhmmss[+-]hhmm
     hh:mm:ss[+-]hh:mm
     hhmmss[+-]hh
     hh:mm:ss[+-]hh
+
+=head3 5.4 Combinations of date and time of day
+
+=head3 5.4.1
+
     YYYYMMDDThhmmss
     YYYY-MM-DDThh:mm:ss
     YYYYMMDDThhmmssZ
@@ -117,6 +194,9 @@ There is no limit on the expressed precision.
     YYYY-MM-DDThh:mm:ss[+-]hh:mm
     YYYYMMDDThhmmss[+-]hh
     YYYY-MM-DDThh:mm:ss[+-]hh
+
+=head3 5.4.2
+
     YYYYMMDDThhmm
     YYYY-MM-DDThh:mm
     YYYYDDDThhmmZ
@@ -124,14 +204,43 @@ There is no limit on the expressed precision.
     YYYYWwwDThhmm[+-]hhmm
     YYYY-Www-DThh:mm[+-]hh
 
+=head3 5.5 Time-Intervals
+
+Will be supported in a later release.
+
 =head2 Supported via parse_time
 
+=head3 5.3.1.1 - 5.3.1.3
+
+maybe prefixed with 'T'
+
+=head3 5.3.1.1
+
     hhmmss
+
+=head3 5.3.1.2
+
     hhmm
     hh
+
+=head3 5.3.1.4
+
     -mmss
     -mm
     --ss
+
+=head1 STANDARDS DOCUMENT
+
+=head2 Title
+
+    ISO8601:2000(E) 
+    Data elements and interchange formats - information exchange -
+    Representation of dates and times
+    Second edition 2000-12-15
+
+=head2 Reference Number
+
+    ISO/TC 154 N 362
 
 =head1 CREDITS
  
