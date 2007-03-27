@@ -1,6 +1,6 @@
 use strict;
 
-use Test::More tests => 140;
+use Test::More tests => 139;
 
 use DateTime::Format::ISO8601;
 
@@ -260,11 +260,11 @@ use DateTime::Format::ISO8601;
     is( $dt->day_of_week, '5' );
 }
 
-{
-    #-Www -W15
-    my $dt = DateTime::Format::ISO8601->parse_datetime( '-W15' );
-    is( $dt->week_number, '15' );
-}
+# {
+#     #-Www -W15
+#     my $dt = DateTime::Format::ISO8601->parse_datetime( '-W15' );
+#     is( $dt->week_number, '15' );
+# }
 
 {
     #-W-D -W-5

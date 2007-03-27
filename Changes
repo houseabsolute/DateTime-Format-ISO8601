@@ -1,5 +1,8 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
+0.05
+    - disable a test that may fail depending on the localtime date
+
 0.04 Sat Nov 15 14:29:58 HST 2003
     - require DT 0.18 and DT::F::B 0.77
     - recommend Test::Pod 0.95 and File::Find::Rule 0.24
