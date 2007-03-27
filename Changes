@@ -1,6 +1,6 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.05
+0.05 Tue Mar 27 11:25:42 HST 2007
     - disable a test that may fail depending on the localtime date
 
 0.04 Sat Nov 15 14:29:58 HST 2003
