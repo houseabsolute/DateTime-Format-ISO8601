@@ -1,3 +1,7 @@
+# Copyright (C) 2003-2005  Joshua Hoblitt
+#
+# $Id$
+
 package DateTime::Format::ISO8601;
 
 use strict;
@@ -112,13 +116,14 @@ sub set_base_datetime {
     # ISO8601 only allows years 0 to 9999
     # this implimentation ignores the needs of expanded formats
     my $dt = DateTime->from_object( object => $args{ object } );
-    my $lower_bound = DateTime->new( year => 0 )->subtract( nanoseconds => 1 );
+    my $lower_bound = DateTime->new( year => 0 );
     my $upper_bound = DateTime->new( year => 10000 );
 
-    if ( DateTime->compare( $dt, $lower_bound ) != 1 ) {
-        croak "base_datetime must be greater then ", $lower_bound->iso8601;
+    if ( $dt < $lower_bound ) {
+        croak "base_datetime must be greater then or equal to ",
+            $lower_bound->iso8601;
     }
-    if ( DateTime->compare( $dt, $upper_bound ) != -1 ) {
+    if ( $dt >= $upper_bound ) {
         croak "base_datetime must be less then ", $upper_bound->iso8601;
     }
 
@@ -536,6 +541,21 @@ DateTime::Format::Builder->create_class(
                     \&_add_day,
                 ],
             },
+
+            {
+                #hhmmss.ssZ 232030.5Z
+                #hh:mm:ss.ssZ 23:20:30.5Z
+                regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+) Z $/x,
+                params => [ qw( hour minute second nanosecond) ],
+                extra  => { time_zone => 'UTC' },
+                postprocess => [
+                    \&_add_year,
+                    \&_add_month,
+                    \&_add_day,
+                    \&_fractional_second
+                ],
+            },
+
             {
                 #hhmmZ 2320Z
                 #hh:mmZ 23:20Z
@@ -576,6 +596,21 @@ DateTime::Format::Builder->create_class(
                 ],
             },
             {
+                #hhmmss.ss[+-]hhmm 152746.5+0100 152746.5-0500
+                #hh:mm:ss.ss[+-]hh:mm 15:27:46.5+01:00 15:27:46.5-05:00
+                regex  => qr/^ T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+)
+                            ([+-] \d\d :?? \d\d) $/x,
+                params => [ qw( hour minute second nanosecond time_zone ) ],
+                postprocess => [
+                    \&_add_year,
+                    \&_add_month,
+                    \&_add_day,
+                    \&_fractional_second,
+                    \&_normalize_offset,
+                ],
+            },
+
+            {
                 #hhmmss[+-]hh 152746+01 152746-05
                 #hh:mm:ss[+-]hh 15:27:46+01 15:27:46-05
                 length => [ qw( 9 10 11 12 ) ],
@@ -599,6 +634,17 @@ DateTime::Format::Builder->create_class(
                 extra  => { time_zone => 'floating' },
             },
             {
+                #YYYYMMDDThhmmss.ss 19850412T101530.123
+                #YYYY-MM-DDThh:mm:ss.ss 1985-04-12T10:15:30.123
+                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
+                            T (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+) $/x,
+                params => [ qw( year month day hour minute second nanosecond ) ],
+                extra  => { time_zone => 'floating' },
+                postprocess => [
+                    \&_fractional_second,
+                ],
+            },
+            {
                 #YYYYMMDDThhmmssZ 19850412T101530Z
                 #YYYY-MM-DDThh:mm:ssZ 1985-04-12T10:15:30Z
                 length => [ qw( 16 20 ) ],
@@ -608,6 +654,19 @@ DateTime::Format::Builder->create_class(
                 extra  => { time_zone => 'UTC' },
             },
             {
+                #YYYYMMDDThhmmss.ssZ 19850412T101530.5Z 20041020T101530.5Z
+                #YYYY-MM-DDThh:mm:ss.ssZ 1985-04-12T10:15:30.5Z 1985-04-12T10:15:30.5Z
+                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
+                            T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+)
+                            Z$/x,
+                params => [ qw( year month day hour minute second nanosecond ) ],
+                extra  => { time_zone => 'UTC' },
+                postprocess => [
+                    \&_fractional_second,
+                ],
+            },
+
+            {
                 #YYYYMMDDThhmmss[+-]hhmm 19850412T101530+0400
                 #YYYY-MM-DDThh:mm:ss[+-]hh:mm 1985-04-12T10:15:30+04:00
                 length => [ qw( 20 25 ) ],
@@ -616,6 +675,19 @@ DateTime::Format::Builder->create_class(
                 params => [ qw( year month day hour minute second time_zone ) ],
                 postprocess => \&_normalize_offset,
             },
+            {
+                #YYYYMMDDThhmmss.ss[+-]hhmm 19850412T101530.5+0100 20041020T101530.5-0500
+                #YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm 1985-04-12T10:15:30.5+01:00 1985-04-12T10:15:30.5-05:00
+                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
+                            T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+)
+                            ([+-] \d\d :?? \d\d) $/x,
+                params => [ qw( year month day hour minute second nanosecond time_zone ) ],
+                postprocess => [
+                    \&_fractional_second,
+                    \&_normalize_offset,
+                ],
+            },
+
             {
                 #YYYYMMDDThhmmss[+-]hh 19850412T101530+04
                 #YYYY-MM-DDThh:mm:ss[+-]hh 1985-04-12T10:15:30+04

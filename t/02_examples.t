@@ -1,6 +1,15 @@
-use strict;
+#!/usr/bin/perl
 
-use Test::More tests => 139;
+# Copyright (C) 2003-2005  Joshua Hoblitt
+#
+# $Id$
+
+use strict;
+use warnings;
+
+use lib qw( ./lib );
+
+use Test::More tests => 174;
 
 use DateTime::Format::ISO8601;
 
@@ -153,7 +162,7 @@ use DateTime::Format::ISO8601;
     #-DDD -102
     my $dt = DateTime::Format::ISO8601->parse_datetime( '-102' );
     my $year = sprintf( "%04i", DateTime->now->year );
-    is( $dt->ymd, "${year}-04-12" );
+    is( $dt->strftime( "%j" ), 102 );
 }
 
 {
@@ -385,11 +394,29 @@ use DateTime::Format::ISO8601;
 }
 
 {
+    #hhmmss.ssZ 232030.5Z
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '232030.5Z' );
+    is( $dt->hms, '23:20:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, 'UTC' );
+}
+
+
+{
     #hh:mm:ssZ 23:20:30Z
     my $dt = DateTime::Format::ISO8601->parse_datetime( '23:20:30Z' );
     is( $dt->hms, '23:20:30' );
     is( $dt->time_zone->name, 'UTC' );
 }
+
+{
+    #hhmmssZ 23:20:30.5Z
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '23:20:30.5Z' );
+    is( $dt->hms, '23:20:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, 'UTC' );
+}
+
 
 {
     #hhmmZ 2320Z
@@ -427,6 +454,31 @@ use DateTime::Format::ISO8601;
 }
 
 {
+    #hhmmss.ss[+/-]hhmm 152746.5+0100 152746.5-0500
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '152746.5+0100' );
+    is( $dt->hms, '15:27:46' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, '+0100' );
+}
+
+{
+    #hhmmss.ss[+/-]hh:mm 152746.5+01:00 152746.5-05:00
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '152746.5-05:00' );
+    is( $dt->hms, '15:27:46' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, '-0500' );
+}
+
+{
+    #hhmmss[+/-]hh:mm 152746.05+01:00 152746.05-05:00
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '152746.05-05:00' );
+    is( $dt->hms, '15:27:46' );
+    is( $dt->nanosecond, 50_000_000 );
+    is( $dt->time_zone->name, '-0500' );
+}
+
+
+{
     #hh:mm:ss[+/-]hh:mm 15:27:46+01:00 15:27:46-05:00
     my $dt = DateTime::Format::ISO8601->parse_datetime( '15:27:46+01:00' );
     is( $dt->hms, '15:27:46' );
@@ -437,6 +489,22 @@ use DateTime::Format::ISO8601;
     #hh:mm:ss[+/-]hh:mm 15:27:46+01:00 15:27:46-05:00
     my $dt = DateTime::Format::ISO8601->parse_datetime( '15:27:46-05:00' );
     is( $dt->hms, '15:27:46' );
+    is( $dt->time_zone->name, '-0500' );
+}
+
+{
+    #hhmmss.ss[+/-]hhmm 15:27:46.5+0100 15:27:46.5-0500
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '15:27:46.5+0100' );
+    is( $dt->hms, '15:27:46' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, '+0100' );
+}
+
+{
+    #hh:mm:ss.ss[+/-]hh:mm 15:27:46.5+01:00 15:27:46.5-05:00
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '15:27:46.5-05:00' );
+    is( $dt->hms, '15:27:46' );
+    is( $dt->nanosecond, 500_000_000 );
     is( $dt->time_zone->name, '-0500' );
 }
 
@@ -483,16 +551,18 @@ use DateTime::Format::ISO8601;
 }
 
 {
-    #YYYYMMDDThhmmss 19850412T101530
-    my $dt = DateTime::Format::ISO8601->parse_datetime( '19850412T101530' );
+    #YYYYMMDDThhmmss.ss 19850412T101530.5
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '19850412T101530.5' );
     is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
     is( $dt->time_zone->name, 'floating' );
 }
 
 {
-    #YYYY-MM-DDThh:mm:ss 1985-04-12T10:15:30
-    my $dt = DateTime::Format::ISO8601->parse_datetime( '1985-04-12T10:15:30' );
+    #YYYY-MM-DDThh:mm:ss.ss 1985-04-12T10:15:30.5
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '1985-04-12T10:15:30.5' );
     is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
     is( $dt->time_zone->name, 'floating' );
 }
 
@@ -511,6 +581,23 @@ use DateTime::Format::ISO8601;
 }
 
 {
+    #YYYYMMDDThhmmss.ssZ 19850412T101530.5Z
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '19850412T101530.5Z' );
+    is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, 'UTC' );
+}
+
+{
+    #YYYY-MM-DDThh:mm:ss.ssZ 1985-04-12T10:15:30.5Z
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '1985-04-12T10:15:30.5Z' );
+    is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, 'UTC' );
+}
+
+
+{
     #YYYYMMDDThhmmss+hhmm 19850412T101530+0400
     my $dt = DateTime::Format::ISO8601->parse_datetime( '19850412T101530+0400' );
     is( $dt->iso8601, '1985-04-12T10:15:30' );
@@ -523,6 +610,23 @@ use DateTime::Format::ISO8601;
     is( $dt->iso8601, '1985-04-12T10:15:30' );
     is( $dt->time_zone->name, '+0400' );
 }
+
+{
+    #YYYYMMDDThhmmss.ss+hhmm 19850412T101530.5+0400
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '19850412T101530.5+0400' );
+    is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, '+0400' );
+}
+
+{
+    #YYYY-MM-DDThh:mm:ss.ss+hh:mm 1985-04-12T10:15:30.5+04:00
+    my $dt = DateTime::Format::ISO8601->parse_datetime( '1985-04-12T10:15:30.5+04:00' );
+    is( $dt->iso8601, '1985-04-12T10:15:30' );
+    is( $dt->nanosecond, 500_000_000 );
+    is( $dt->time_zone->name, '+0400' );
+}
+
 
 {
     #YYYYMMDDThhmmss+hh 19850412T101530+04
