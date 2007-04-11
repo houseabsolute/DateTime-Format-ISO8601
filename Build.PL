@@ -11,7 +11,8 @@ Module::Build->new(
         DateTime::Format::Builder   => '0.77',
     },
     recommends          => {
-        Test::Pod                   => '0.95',
-        File::Find::Rule            => '0.24',
+        'Test::Pod'                 => '0.95',
+        'File::Find::Rule'          => '0.24',
+        'Test::Distribution'        => '1.22',
     },
 )->create_build_script;

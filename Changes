@@ -1,6 +1,7 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
 0.06
+    - add Test::Distribution tests
     - merge rel_0_04_FIXES branch
 
 0.05 Tue Mar 27 11:25:42 HST 2007
