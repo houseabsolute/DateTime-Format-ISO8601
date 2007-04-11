@@ -1,8 +1,9 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.06
+0.06 Tue Apr 10 15:17:34 HST 2007
     - add Test::Distribution tests
-    - merge rel_0_04_FIXES branch
+    - merge rel_0_04_FIXES branch -- fixing the major regressions introduced
+      in 0.05
 
 0.05 Tue Mar 27 11:25:42 HST 2007
     - disable a test that may fail depending on the localtime date
