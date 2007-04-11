@@ -3,6 +3,19 @@ Revision history for Perl module DateTime::Format::ISO8601
 0.05 Tue Mar 27 11:25:42 HST 2007
     - disable a test that may fail depending on the localtime date
 
+0.0403 Sun Aug  7 13:18:48 HST 2005
+    - update doc format
+    - tidy Build.PL
+    - auto-generate Makefile.PL
+    - change set_base_datetime() to use DT's overloaded <=> instead of ->compare()
+    - tidy test sources and reduce runtime
+
+0.0402 Thu Oct 28 20:25:50 HST 2004
+    - add 8 missing formats, patch by Kelly McCauley
+
+0.0401 Sun Feb  8 13:23:19 HST 2004
+    - fix test for -DDD format as reported by Jonathan Leffler <jleffler _AT_ earthlink.net>
+
 0.04 Sat Nov 15 14:29:58 HST 2003
     - require DT 0.18 and DT::F::B 0.77
     - recommend Test::Pod 0.95 and File::Find::Rule 0.24
