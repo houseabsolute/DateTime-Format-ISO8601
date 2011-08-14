@@ -1,6 +1,4 @@
 # Copyright (C) 2003-2005  Joshua Hoblitt
-#
-# $Id$
 
 package DateTime::Format::ISO8601;
 

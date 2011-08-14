@@ -1,8 +1,6 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2003-2005  Joshua Hoblitt
-#
-# $Id$
 
 use strict;
 use warnings;

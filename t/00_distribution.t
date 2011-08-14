@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
 
 # Copyright (C) 2005  Joshua Hoblitt
-#
-# $Id$
 
 use strict;
 use warnings FATAL => qw( all );
