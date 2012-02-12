@@ -1,6 +1,6 @@
 Revision history for Perl module DateTime::Format::ISO8601
 
-0.08
+0.08 Sat Feb 11 23:40:43 MST 2012
     - rt.cpan.org #52645 : UTC offsets must be in the same format
       (basic|extended) as the time as to which it is attached.
 
