@@ -675,10 +675,20 @@ DateTime::Format::Builder->create_class(
             },
             {
                 #YYYYMMDDThhmmss.ss[+-]hhmm 19850412T101530.5+0100 20041020T101530.5-0500
+                regex  => qr/^ (\d{4}) (\d\d) (\d\d)
+                            T?? (\d\d) (\d\d) (\d\d) [\.,] (\d+)
+                            ([+-] \d\d \d\d) $/x,
+                params => [ qw( year month day hour minute second nanosecond time_zone ) ],
+                postprocess => [
+                    \&_fractional_second,
+                    \&_normalize_offset,
+                ],
+            },
+            {
                 #YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm 1985-04-12T10:15:30.5+01:00 1985-04-12T10:15:30.5-05:00
-                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
-                            T?? (\d\d) :?? (\d\d) :?? (\d\d) [\.,] (\d+)
-                            ([+-] \d\d :?? \d\d) $/x,
+                regex  => qr/^ (\d{4}) -  (\d\d) - (\d\d)
+                            T?? (\d\d) : (\d\d) : (\d\d) [\.,] (\d+)
+                            ([+-] \d\d : \d\d) $/x,
                 params => [ qw( year month day hour minute second nanosecond time_zone ) ],
                 postprocess => [
                     \&_fractional_second,
