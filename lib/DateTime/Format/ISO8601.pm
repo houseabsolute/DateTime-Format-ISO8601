@@ -114,7 +114,7 @@ sub set_base_datetime {
     );
        
     # ISO8601 only allows years 0 to 9999
-    # this implimentation ignores the needs of expanded formats
+    # this implementation ignores the needs of expanded formats
     my $dt = DateTime->from_object( object => $args{ object } );
     my $lower_bound = DateTime->new( year => 0 );
     my $upper_bound = DateTime->new( year => 10000 );
