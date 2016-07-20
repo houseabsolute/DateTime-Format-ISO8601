@@ -31,11 +31,6 @@ eval {
 };
 like( $@, qr/Invalid date format/ );
 
-eval {
-    my $dt = $iso8601->parse_datetime( '2011-07-04T20:50:23+0200' );
-};
-like( $@, qr/Invalid date format/ );
-
 # more "colon or not" coverage
 eval {
     my $dt = $iso8601->parse_datetime( '20091210T090000.00+01:00' );

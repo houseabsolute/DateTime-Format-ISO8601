@@ -720,3 +720,9 @@ my $iso8601 = DateTime::Format::ISO8601->new(
     my $dt = $iso8601->parse_time( '--50' );
     is( $dt->second, '50' );
 }
+
+{
+    #
+    my $dt = $iso8601->parse_datetime("2011-04-30T10:00:00-0700");
+    is( $dt->time_zone->name, '-0700', "RT#108082");
+}

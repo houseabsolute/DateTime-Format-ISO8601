@@ -669,7 +669,7 @@ DateTime::Format::Builder->create_class(
             {
                 #YYYYMMDDThhmmss[+-]hhmm 19850412T101530+0400
                 #YYYY-MM-DDThh:mm:ss[+-]hh:mm 1985-04-12T10:15:30+04:00
-                length => [ qw( 20 25 ) ],
+                length => [ qw( 20 24 25 ) ],
                 regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
                             T (\d\d) :?? (\d\d) :?? (\d\d) ([+-] \d\d :?? \d\d) $/x,
                 params => [ qw( year month day hour minute second time_zone ) ],
