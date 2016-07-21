@@ -7,7 +7,7 @@ use warnings;
 
 use lib qw( ./lib );
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use DateTime::Format::ISO8601;
 
