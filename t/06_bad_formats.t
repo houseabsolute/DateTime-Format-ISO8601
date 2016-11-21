@@ -7,7 +7,7 @@ use warnings;
 
 use lib qw( ./lib );
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use DateTime::Format::ISO8601;
 
@@ -28,11 +28,6 @@ my $iso8601 = DateTime::Format::ISO8601->new(
 
 eval {
     my $dt = $iso8601->parse_datetime( '2009-12-10T09:00:00.00+0100' );
-};
-like( $@, qr/Invalid date format/ );
-
-eval {
-    my $dt = $iso8601->parse_datetime( '2011-07-04T20:50:23+0200' );
 };
 like( $@, qr/Invalid date format/ );
 
