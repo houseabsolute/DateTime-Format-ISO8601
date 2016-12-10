@@ -1,10 +1,8 @@
 {{$NEXT}}
 
-
-0.08 2012-02-11
-
-* rt.cpan.org #52645 : UTC offsets must be in the same format (basic|extended)
-  as the time as to which it is attached.
+* Add a format_datetime() method, which makes this class play nicer with
+  DateTime.pm. Implemented by Doug
+  Bell. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/2
 
 
 0.07 2010-01-17

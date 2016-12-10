@@ -176,6 +176,34 @@ sub set_cut_off_year {
     return $self;
 }
 
+sub format_datetime {
+    my $self = shift;
+    my ($dt) = validate_pos(
+        @_,
+        {
+            type => OBJECT,
+            isa  => 'DateTime',
+        }
+    );
+
+    my $cldr
+        = $dt->nanosecond % 1000000 ? 'yyyy-MM-ddTHH:mm:ss.SSSSSSSSS'
+        : $dt->nanosecond           ? 'yyyy-MM-ddTHH:mm:ss.SSS'
+        :                             'yyyy-MM-ddTHH:mm:ss';
+
+    my $tz;
+    if ( $dt->time_zone->is_utc ) {
+        $tz = 'Z';
+    }
+    else {
+        my $offset = $dt->time_zone->offset_for_datetime($dt);
+        $tz = DateTime::TimeZone->offset_as_string($offset);
+        substr $tz, 3, 0, ':';
+    }
+
+    return $dt->format_cldr($cldr) . $tz;
+}
+
 DateTime::Format::Builder->create_class(
     parsers => {
         parse_datetime => [
@@ -1009,14 +1037,16 @@ __END__
 
     my $str = '2020-07-25T11:32:31';
 
-    my $dt = DateTime::Format::ISO8601->parse_datetime( $str );
-    $dt = DateTime::Format::ISO8601->parse_time( $str );
+    my $dt = DateTime::Format::ISO8601->parse_datetime($str);
+    $dt = DateTime::Format::ISO8601->parse_time($str);
 
     # or
 
     my $iso8601 = DateTime::Format::ISO8601->new;
-    $dt = $iso8601->parse_datetime( $str );
-    $dt = $iso8601->parse_time( $str );
+    $dt = $iso8601->parse_datetime($str);
+    $dt = $iso8601->parse_time($str);
+
+    $str = DateTime::Format::ISO8601->format_datetime($dt);
 
 =head1 DESCRIPTION
 
@@ -1149,6 +1179,20 @@ These may be called as either class or object methods.
 =item * parse_time
 
 Please see the L</FORMATS> section.
+
+=back
+
+=head3 Formatter
+
+This may be called as either class or object method.
+
+=over 4
+
+=item * format_datetime( $dt )
+
+Formats the datetime in an ISO8601-compatible format. This differs from
+L<DateTime/iso8601> by including nanoseconds/milliseconds and the correct
+timezone offset.
 
 =back
 
