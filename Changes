@@ -4,6 +4,10 @@
   DateTime.pm. Implemented by Doug
   Bell. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/2
 
+* Add support for the `YYYY-MM-DDThh:mm:ss.ss[+-]hh` and
+  `YYYYMMDDThhmmss.ss[+-]hh` formats. Implemented by Thomas
+  Klausner. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/3
+
 
 0.07 2010-01-17
 

@@ -727,6 +727,32 @@ DateTime::Format::Builder->create_class(
                 ],
             },
             {
+                #YYYY-MM-DDThh:mm:ss.ss[+-]hh 1985-04-12T10:15:30.5+01 1985-04-12T10:15:30.5-05
+                regex => qr/^ (\d{4}) -  (\d\d) - (\d\d)
+                            T?? (\d\d) : (\d\d) : (\d\d) [\.,] (\d+)
+                            ([+-] \d\d ) $/x,
+                params => [
+                    qw( year month day hour minute second nanosecond time_zone )
+                ],
+                postprocess => [
+                    \&_fractional_second,
+                    \&_normalize_offset,
+                ],
+            },
+            {
+                #YYYYMMDDThhmmss.ss[+-]hh 19850412T101530.5+01 20041020T101530.5-05
+                regex => qr/^ (\d{4}) (\d\d) (\d\d)
+                            T?? (\d\d) (\d\d) (\d\d) [\.,] (\d+)
+                            ([+-] \d\d ) $/x,
+                params => [
+                    qw( year month day hour minute second nanosecond time_zone )
+                ],
+                postprocess => [
+                    \&_fractional_second,
+                    \&_normalize_offset,
+                ],
+            },
+            {
                 #YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm 1985-04-12T10:15:30.5+01:00 1985-04-12T10:15:30.5-05:00
                 regex => qr/^ (\d{4}) -  (\d\d) - (\d\d)
                             T?? (\d\d) : (\d\d) : (\d\d) [\.,] (\d+)
@@ -1381,6 +1407,8 @@ optionally prefixed with 'T'
 
    YYYYMMDDThhmmss.ss
    YYYY-MM-DDThh:mm:ss.ss
+   YYYYMMDDThhmmss.ss[+-]hh
+   YYYY-MM-DDThh:mm:ss.ss[+-]hh
    YYYYMMDDThhmmss.ss[+-]hhmm
    YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm
 
