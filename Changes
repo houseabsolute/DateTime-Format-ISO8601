@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.09     2020-07-25 (TRIAL RELEASE)
+
 * Add a format_datetime() method, which makes this class play nicer with
   DateTime.pm. Implemented by Doug
   Bell. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/2

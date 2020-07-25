@@ -4,7 +4,7 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 # VERSION
 
-version 0.08
+version 0.09
 
 # SYNOPSIS
 
@@ -12,14 +12,16 @@ version 0.08
 
     my $str = '2020-07-25T11:32:31';
 
-    my $dt = DateTime::Format::ISO8601->parse_datetime( $str );
-    $dt = DateTime::Format::ISO8601->parse_time( $str );
+    my $dt = DateTime::Format::ISO8601->parse_datetime($str);
+    $dt = DateTime::Format::ISO8601->parse_time($str);
 
     # or
 
     my $iso8601 = DateTime::Format::ISO8601->new;
-    $dt = $iso8601->parse_datetime( $str );
-    $dt = $iso8601->parse_time( $str );
+    $dt = $iso8601->parse_datetime($str);
+    $dt = $iso8601->parse_time($str);
+
+    $str = DateTime::Format::ISO8601->format_datetime($dt);
 
 # DESCRIPTION
 
@@ -133,6 +135,16 @@ These may be called as either class or object methods.
 - parse\_time
 
     Please see the ["FORMATS"](#formats) section.
+
+### Formatter
+
+This may be called as either class or object method.
+
+- format\_datetime( $dt )
+
+    Formats the datetime in an ISO8601-compatible format. This differs from
+    ["iso8601" in DateTime](https://metacpan.org/pod/DateTime#iso8601) by including nanoseconds/milliseconds and the correct
+    timezone offset.
 
 # FORMATS
 
@@ -315,6 +327,8 @@ optionally prefixed with 'T'
 
     YYYYMMDDThhmmss.ss
     YYYY-MM-DDThh:mm:ss.ss
+    YYYYMMDDThhmmss.ss[+-]hh
+    YYYY-MM-DDThh:mm:ss.ss[+-]hh
     YYYYMMDDThhmmss.ss[+-]hhmm
     YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm
 
@@ -391,22 +405,24 @@ Everyone at the DateTime `Asylum`.
 
 # SUPPORT
 
-Bugs may be submitted at [https://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-HiRes](https://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-HiRes) or via email to [bug-datetime-hires@rt.cpan.org](mailto:bug-datetime-hires@rt.cpan.org).
+Bugs may be submitted at [https://github.com/houseabsolute/DateTime-Format-ISO8601/issues](https://github.com/houseabsolute/DateTime-Format-ISO8601/issues).
 
 I am also usually active on IRC as 'autarch' on `irc://irc.perl.org`.
 
 # SOURCE
 
-The source code repository for DateTime-Format-ISO8601 can be found at [https://github.com/houseabsolute/-DateTime-Format-ISO8601](https://github.com/houseabsolute/-DateTime-Format-ISO8601).
+The source code repository for DateTime-Format-ISO8601 can be found at [https://github.com/houseabsolute/DateTime-Format-ISO8601](https://github.com/houseabsolute/DateTime-Format-ISO8601).
 
 # AUTHORS
 
 - Joshua Hoblitt <josh@hoblitt.com>
 - Dave Rolsky <autarch@urth.org>
 
-# CONTRIBUTOR
+# CONTRIBUTORS
 
-joe <draxil@gmail.com>
+- Doug Bell <doug@preaction.me>
+- joe <draxil@gmail.com>
+- Thomas Klausner <domm@plix.at>
 
 # COPYRIGHT AND LICENSE
 

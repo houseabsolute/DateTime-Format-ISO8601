@@ -63,7 +63,7 @@ Once installed, here are some dzil commands you might try:
 
 You can learn more about Dist::Zilla at http://dzil.org/.
 
-The code for this distribution is [hosted on GitHub](https://github.com/houseabsolute/-DateTime-Format-ISO8601).
+The code for this distribution is [hosted on GitHub](https://github.com/houseabsolute/DateTime-Format-ISO8601).
 
 You can submit code changes by forking the repository, pushing your code
 changes to your clone, and then submitting a pull request. Please update the
@@ -72,17 +72,9 @@ work. See the GitHub documentation for [detailed instructions on pull
 requests](https://help.github.com/articles/creating-a-pull-request)
 
 If you have found a bug, but do not have an accompanying patch to fix it, you
-can submit an issue report [via the web](https://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-HiRes) or [via email](bug-datetime-hires@rt.cpan.org).
+can submit an issue report [via the web](https://github.com/houseabsolute/DateTime-Format-ISO8601/issues).
 
 
-## Continuous Integration
-
-All pull requests for this distribution will be automatically tested
-on Linux by [Travis](https://travis-ci.org/houseabsolute/-DateTime-Format-ISO8601).
-
-All CI results will be visible in the pull request on GitHub. Follow the
-appropriate links for details when tests fail. PRs cannot be merged until tests
-pass.
 
 
 ## TidyAll
