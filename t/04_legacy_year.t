@@ -1,74 +1,83 @@
-#!/usr/bin/perl
-
 # Copyright (C) 2005  Joshua Hoblitt
-
 use strict;
 use warnings;
 
-use lib qw( ./lib );
-
-use Test::More tests => 36;
+use Test2::V0;
 
 use DateTime::Format::ISO8601;
 
 {
-    is( DateTime::Format::ISO8601->DefaultLegacyYear, 1 );
+    is(
+        DateTime::Format::ISO8601->DefaultLegacyYear, 1,
+        'default legacy year is 1'
+    );
     my $iso_parser = DateTime::Format::ISO8601->new;
-    is( $iso_parser->legacy_year, 1 );
+    is( $iso_parser->legacy_year, 1, 'legacy_year is 1' );
 }
 
-foreach my $n ( 0, 1, undef ) {
-    DateTime::Format::ISO8601->DefaultLegacyYear( $n );
-    is( DateTime::Format::ISO8601->DefaultLegacyYear, $n );
+for my $n ( 0, 1, undef ) {
+    DateTime::Format::ISO8601->DefaultLegacyYear($n);
+    is(
+        DateTime::Format::ISO8601->DefaultLegacyYear, $n,
+        'default legacy was set'
+    );
     my $iso_parser = DateTime::Format::ISO8601->new;
-    is( $iso_parser->legacy_year, $n );
+    is( $iso_parser->legacy_year, $n, 'set legacy year' );
 }
 
-foreach my $n ( -3 .. -1, 2 .. 4 ) {
-    eval { DateTime::Format::ISO8601->DefaultLegacyYear( $n ) };
-    like( $@, qr/did not pass the 'is 0, 1, or undef' callback/ );
+for my $n ( -3 .. -1, 2 .. 4 ) {
+    like(
+        dies { DateTime::Format::ISO8601->DefaultLegacyYear($n) },
+        qr/did not pass the 'is 0, 1, or undef' callback/,
+        'set legacy year to invalid value',
+    );
 }
 
 # restore default legacy year behavior
-DateTime::Format::ISO8601->DefaultLegacyYear( 1 );
+DateTime::Format::ISO8601->DefaultLegacyYear(1);
 
-foreach my $n ( 0, 1, undef ) {
+for my $n ( 0, 1, undef ) {
     my $iso_parser = DateTime::Format::ISO8601->new( legacy_year => $n );
     isa_ok( $iso_parser, 'DateTime::Format::ISO8601' );
-    is( $iso_parser->legacy_year, $n );
+    is( $iso_parser->legacy_year, $n, 'pass legacy year to constructor' );
 
-    {
-        my $iso_parser = DateTime::Format::ISO8601->new->set_legacy_year( $n );
-        is( $iso_parser->legacy_year, $n );
-    }
+    $iso_parser = DateTime::Format::ISO8601->new->set_legacy_year($n);
+    is( $iso_parser->legacy_year, $n, 'call set_legacy_year on object' );
 }
 
-foreach my $n ( -3 .. -1, 2 .. 4 ) {
-    eval { DateTime::Format::ISO8601->new( legacy_year => $n ) };
-    like( $@, qr/did not pass the 'is 0, 1, or undef' callback/ );
+for my $n ( -3 .. -1, 2 .. 4 ) {
+    like(
+        dies { DateTime::Format::ISO8601->new( legacy_year => $n ) },
+        qr/did not pass the 'is 0, 1, or undef' callback/,
+        'pass invalid legacy year to constructor',
+    );
 
-    eval { DateTime::Format::ISO8601->new->set_legacy_year( $n ) };
-    like( $@, qr/did not pass the 'is 0, 1, or undef' callback/ );
+    like(
+        dies { DateTime::Format::ISO8601->new->set_legacy_year($n) },
+        qr/did not pass the 'is 0, 1, or undef' callback/,
+        'pass invalid legacy year to set_legacy_year',
+    );
 }
 
-{
-    my $failed = 0;
+for my $year ( 0 .. 99 ) {
+    $year *= 100;    # [0, 9900], step 100
+    my $iso_parser = DateTime::Format::ISO8601->new(
+        legacy_year   => 0,
+        base_datetime => DateTime->new( year => $year ),
+    );
 
-    foreach my $year ( 0 .. 99 ) {
-        $year *= 100; # [0, 9900], step 100
-        my $iso_parser = DateTime::Format::ISO8601->new(
-            legacy_year     => 0,
-            base_datetime   => DateTime->new( year => $year ),
+    for my $tdy ( 0 .. 9 ) {
+        $tdy *= 10;    # [0, 90], step 10
+        $tdy = sprintf( '%02d', $tdy );
+        my $dt = $iso_parser->parse_datetime("-$tdy");
+        is(
+            $dt->year,
+            sprintf(
+                '%d', $iso_parser->base_datetime->strftime('%C') . $tdy
+            ),
+            "parses $tdy based on base_datetime with year $year",
         );
-
-        foreach my $tdy ( 0 .. 9 ) {
-            $tdy *= 10; # [0, 90], step 10
-            $tdy = sprintf( "%02d", $tdy );
-            my $dt = $iso_parser->parse_datetime( "-$tdy" );
-            $failed++ unless $dt->year eq sprintf(
-                "%d", $iso_parser->base_datetime->strftime( "%C" ) . $tdy );
-        }
     }
-
-    is( $failed, 0, "parse_datetime() with a base_datetime" );
 }
+
+done_testing();
