@@ -1084,19 +1084,13 @@ __END__
 Parses almost all ISO8601 date and time formats. ISO8601 time-intervals will
 be supported in a later release.
 
-=head1 USAGE
+=head1 METHODS
 
-=head2 Import Parameters
+This class provides the following methods:
 
-This module accepts no arguments to it's C<import> method.
+=head2 Constructors
 
-=head2 Methods
-
-=head3 Constructors
-
-=over 4
-
-=item * new( ... )
+=head3 DateTime::Format::ISO8601->new( ... )
 
 Accepts an optional hash.
 
@@ -1120,8 +1114,8 @@ This key is optional.
 A integer representing the cut-off point between interpreting 2-digits years
 as 19xx or 20xx.
 
-    2-digit years <  legacy_year will be interpreted as 20xx
-    2-digit years >= legacy_year will be untreated as 19xx
+    2-digit years <  cut_off_year will be interpreted as 20xx
+    2-digit years >= cut_off_year will be untreated as 19xx
 
 This key defaults to the value of C<DefaultCutOffYear>.
 
@@ -1131,35 +1125,34 @@ A boolean value controlling if a 2-digit year is interpreted as being in the
 current century (unless a C<base_datetime> is set) or if C<cut_off_year>
 should be used to place the year in either 20xx or 19xx.
 
+If this is true, then the C<cut_off_year> is used. If this is false, then the
+year is always interpreted as being in the current century.
+
 This key defaults to the value of C<DefaultLegacyYear>.
 
 =back
 
-=item * clone
+=head3 $iso8601->clone
 
 Returns a replica of the given object.
 
-=back
+=head2 Object Methods
 
-=head3 Object Methods
-
-=over 4
-
-=item * base_datetime
+=head3 $iso8601->base_datetime
 
 Returns a C<DateTime> object if a C<base_datetime> has been set.
 
-=item * set_base_datetime( object => $object )
+=head3 $iso8601->set_base_datetime( object => $object )
 
 Accepts a C<DateTime> object that will be used to fill in missing information
 from incomplete date/time formats.
 
-=item * cut_off_year
+=head3 $iso8601->cut_off_year
 
 Returns a integer representing the cut-off point between interpreting
 2-digits years as 19xx or 20xx.
 
-=item * set_cut_off_year($int)
+=head3 $iso8601->set_cut_off_year($int)
 
 Accepts a integer representing the cut-off point between interpreting
 2-digits years as 19xx or 20xx.
@@ -1167,72 +1160,58 @@ Accepts a integer representing the cut-off point between interpreting
     2-digit years <  legacy_year will be interpreted as 20xx
     2-digit years >= legacy_year will be interpreted as 19xx
 
-=item * legacy_year
+=head3 $iso8601->legacy_year
 
 Returns a boolean value indicating the 2-digit year handling behavior.
 
-=item * set_legacy_year($bool)
+=head3 $iso8601->set_legacy_year($bool)
 
 Accepts a boolean value controlling if a 2-digit year is interpreted as being
 in the current century (unless a C<base_datetime> is set) or if
 C<cut_off_year> should be used to place the year in either 20xx or 19xx.
 
-=back
+=head2 Class Methods
 
-=head3 Class Methods
-
-=over 4
-
-=item * DefaultCutOffYear($int)
+=head3 DateTime::Format::ISO8601->DefaultCutOffYear($int)
 
 Accepts a integer representing the cut-off point for 2-digit years when
 calling C<parse_*> as class methods and the default value for C<cut_off_year>
 when creating objects. If called with no parameters this method will return
 the default value for C<cut_off_year>.
 
-=item * DefaultLegacyYear($bool)
+=head3 DateTime::Format::ISO8601->DefaultLegacyYear($bool)
 
 Accepts a boolean value controlling the legacy year behavior when calling
 C<parse_*> as class methods and the default value for C<legacy_year> when
 creating objects. If called with no parameters this method will return the
 default value for C<legacy_year>.
 
-=back
+=head2 Parser(s)
 
-=head3 Parser(s)
+These methods may be called as either class or object methods.
 
-These may be called as either class or object methods.
+=head3 parse_datetime
 
-=over 4
-
-=item * parse_datetime
-
-=item * parse_time
+=head3 parse_time
 
 Please see the L</FORMATS> section.
 
-=back
-
-=head3 Formatter
+=head2 Formatter
 
 This may be called as either class or object method.
 
-=over 4
-
-=item * format_datetime($dt)
+=head3 format_datetime($dt)
 
 Formats the datetime in an ISO8601-compatible format. This differs from
 L<DateTime/iso8601> by including nanoseconds/milliseconds and the correct
 timezone offset.
 
-=back
-
 =head1 FORMATS
 
-There are 6 string that can match against date only or time only formats.
+There are 6 strings that can match against date only or time only formats.
 The C<parse_datetime> method will attempt to match these ambiguous strings
-against date only formats. If you want to match against the time only
-formats see the C<parse_time> method.
+against date only formats. If you want to match against the time only formats
+use the C<parse_time> method.
 
 =head2 Conventions
 
@@ -1262,194 +1241,373 @@ which they appear.
 
 =head3 5.2 Dates
 
-=head3 5.2.1.1
+=over 4
 
-    YYYYMMDD
-    YYYY-MM-DD
+=item * 5.2.1.1
 
-=head3 5.2.1.2
+=over 8
 
-    YYYY-MM
-    YYYY
-    YY
+=item YYYYMMDD
 
-=head3 5.2.1.3
+=item YYYY-MM-DD
 
-    YYMMDD
-    YY-MM-DD
-    -YYMM
-    -YY-MM
-    -YY
-    --MMDD
-    --MM-DD
-    --MM
-    ---DD
+=back
 
-=head3 5.2.1.4
+=item * 5.2.1.2
 
-    +[YY]YYYYMMDD
-    +[YY]YYYY-MM-DD
-    +[YY]YYYY-MM
-    +[YY]YYYY
-    +[YY]YY
+=over 8
 
-=head3 5.2.2.1
+=item YYYY-MM
 
-    YYYYDDD
-    YYYY-DDD
+=item YYYY
 
-=head3 5.2.2.2
+=item YY
 
-    YYDDD
-    YY-DDD
-    -DDD
+=back
 
-=head3 5.2.2.3
+=item * 5.2.1.3
 
-    +[YY]YYYYDDD
-    +[YY]YYYY-DDD
+=over 8
 
-=head3 5.3.2.1
+=item YYMMDD
 
-    YYYYWwwD
-    YYYY-Www-D
+=item YY-MM-DD
 
-=head3 5.2.3.2
+=item -YYMM
 
-    YYYYWww
-    YYYY-Www
-    YYWwwD
-    YY-Www-D
-    YYWww
-    YY-Www
-    -YWwwD
-    -Y-Www-D
-    -YWww
-    -Y-Www
-    -WwwD
-    -Www-D
-    -Www
-    -W-D
+=item -YY-MM
 
-=head3 5.2.3.4
+=item -YY
 
-    +[YY]YYYYWwwD
-    +[YY]YYYY-Www-D
-    +[YY]YYYYWww
-    +[YY]YYYY-Www
+=item --MMDD
+
+=item --MM-DD
+
+=item --MM
+
+=item ---DD
+
+=back
+
+=item * 5.2.1.4
+
+=over 8
+
+=item +[YY]YYYYMMDD
+
+=item +[YY]YYYY-MM-DD
+
+=item +[YY]YYYY-MM
+
+=item +[YY]YYYY
+
+=item +[YY]YY
+
+=back
+
+=item * 5.2.2.1
+
+=over 8
+
+=item YYYYDDD
+
+=item YYYY-DDD
+
+=back
+
+=item * 5.2.2.2
+
+=over 8
+
+=item YYDDD
+
+=item YY-DDD
+
+=item -DDD
+
+=back
+
+=item * 5.2.2.3
+
+=over 8
+
+=item +[YY]YYYYDDD
+
+=item +[YY]YYYY-DDD
+
+=back
+
+=item * 5.2.3.1
+
+=over 8
+
+=item YYYYWwwD
+
+=item YYYY-Www-D
+
+=back
+
+=item * 5.2.3.2
+
+=over 8
+
+=item YYYYWww
+
+=item YYYY-Www
+
+=item YYWwwD
+
+=item YY-Www-D
+
+=item YYWww
+
+=item YY-Www
+
+=item -YWwwD
+
+=item -Y-Www-D
+
+=item -YWww
+
+=item -Y-Www
+
+=item -WwwD
+
+=item -Www-D
+
+=item -Www
+
+=item -W-D
+
+=back
+
+=item * 5.2.3.4
+
+=over 8
+
+=item +[YY]YYYYWwwD
+
+=item +[YY]YYYY-Www-D
+
+=item +[YY]YYYYWww
+
+=item +[YY]YYYY-Www
+
+=back
+
+=back
 
 =head3 5.3 Time of Day
 
-=head3 5.3.1.1 - 5.3.1.3
+=over 4
 
-optionally prefixed with 'T'
+=item * 5.3.1.1 - 5.3.1.3
 
-=head3 5.3.1.1
+Values can optionally be prefixed with 'T'.
 
-    hh:mm:ss
+=item * 5.3.1.1
 
-=head3 5.3.1.2
+=over 8
 
-    hh:mm
+=item hh:mm:ss
 
-=head3 5.3.1.3 - 5.3.1.4
+=back
+
+=item * 5.3.1.2
+
+=over 8
+
+=item hh:mm
+
+=back
+
+=item * 5.3.1.3 - 5.3.1.4
 
 fractional (decimal) separator maybe either ',' or '.'
 
-=head3 5.3.1.3
+=item * 5.3.1.3
 
-    hhmmss,ss
-    hh:mm:ss,ss
-    hhmm,mm
-    hh:mm,mm
-    hh,hh
+=over 8
 
-=head3 5.3.1.4
+=item hhmmss,ss
 
-    -mm:ss
-    -mmss,s
-    -mm:ss,s
-    -mm,m
-    --ss,s
+=item hh:mm:ss,ss
 
-=head3 5.3.3 - 5.3.4.2
+=item hhmm,mm
 
-optionally prefixed with 'T'
+=item hh:mm,mm
 
-=head3 5.3.3
+=item hh,hh
 
-    hhmmssZ
-    hh:mm:ssZ
-    hhmmZ
-    hh:mmZ
-    hhZ
-    hhmmss.ssZ
-    hh:mm:ss.ssZ
+=back
 
-=head3 5.3.4.2
+=item * 5.3.1.4
 
-    hhmmss[+-]hhmm
-    hh:mm:ss[+-]hh:mm
-    hhmmss[+-]hh
-    hh:mm:ss[+-]hh
-    hhmmss.ss[+-]hhmm
-    hh:mm:ss.ss[+-]hh:mm
+=over 8
+
+=item -mm:ss
+
+=item -mmss,s
+
+=item -mm:ss,s
+
+=item -mm,m
+
+=item --ss,s
+
+=back
+
+=item * 5.3.3 - 5.3.4.2
+
+Values can optionally be prefixed with 'T'.
+
+=item * 5.3.3
+
+=over 8
+
+=item hhmmssZ
+
+=item hh:mm:ssZ
+
+=item hhmmZ
+
+=item hh:mmZ
+
+=item hhZ
+
+=item hhmmss.ssZ
+
+=item hh:mm:ss.ssZ
+
+=back
+
+=item * 5.3.4.2
+
+=over 8
+
+=item hhmmss[+-]hhmm
+
+=item hh:mm:ss[+-]hh:mm
+
+=item hhmmss[+-]hh
+
+=item hh:mm:ss[+-]hh
+
+=item hhmmss.ss[+-]hhmm
+
+=item hh:mm:ss.ss[+-]hh:mm
+
+=back
+
+=back
 
 =head3 5.4 Combinations of date and time of day
 
-=head3 5.4.1
+=over 4
 
-    YYYYMMDDThhmmss
-    YYYY-MM-DDThh:mm:ss
-    YYYYMMDDThhmmssZ
-    YYYY-MM-DDThh:mm:ssZ
-    YYYYMMDDThhmmss[+-]hhmm
-    YYYY-MM-DDThh:mm:ss[+-]hh:mm
-    YYYYMMDDThhmmss[+-]hh
-    YYYY-MM-DDThh:mm:ss[+-]hh
+=item * 5.4.1
 
-=head3 5.4.2
+=over 8
 
-   YYYYMMDDThhmmss.ss
-   YYYY-MM-DDThh:mm:ss.ss
-   YYYYMMDDThhmmss.ss[+-]hh
-   YYYY-MM-DDThh:mm:ss.ss[+-]hh
-   YYYYMMDDThhmmss.ss[+-]hhmm
-   YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm
+=item YYYYMMDDThhmmss
 
-Support for this section is not complete.
+=item YYYY-MM-DDThh:mm:ss
 
-    YYYYMMDDThhmm
-    YYYY-MM-DDThh:mm
-    YYYYDDDThhmmZ
-    YYYY-DDDThh:mmZ
-    YYYYWwwDThhmm[+-]hhmm
-    YYYY-Www-DThh:mm[+-]hh
+=item YYYYMMDDThhmmssZ
+
+=item YYYY-MM-DDThh:mm:ssZ
+
+=item YYYYMMDDThhmmss[+-]hhmm
+
+=item YYYY-MM-DDThh:mm:ss[+-]hh:mm
+
+=item YYYYMMDDThhmmss[+-]hh
+
+=item YYYY-MM-DDThh:mm:ss[+-]hh
+
+=back
+
+=item * 5.4.2
+
+=over 8
+
+=item YYYYMMDDThhmmss.ss
+
+=item YYYY-MM-DDThh:mm:ss.ss
+
+=item YYYYMMDDThhmmss.ss[+-]hh
+
+=item YYYY-MM-DDThh:mm:ss.ss[+-]hh
+
+=item YYYYMMDDThhmmss.ss[+-]hhmm
+
+=item YYYY-MM-DDThh:mm:ss.ss[+-]hh:mm
+
+=back
+
+=item * Support for this section is not complete.
+
+=over 8
+
+=item YYYYMMDDThhmm
+
+=item YYYY-MM-DDThh:mm
+
+=item YYYYDDDThhmmZ
+
+=item YYYY-DDDThh:mmZ
+
+=item YYYYWwwDThhmm[+-]hhmm
+
+=item YYYY-Www-DThh:mm[+-]hh
+
+=back
+
+=back
 
 =head3 5.5 Time-Intervals
 
-Will be supported in a later release.
+These are not currently supported
 
 =head2 Supported via parse_time
 
 =head3 5.3.1.1 - 5.3.1.3
 
-optionally prefixed with 'T'
+Values can optionally be prefixed with 'T'.
 
-=head3 5.3.1.1
+=over 4
 
-    hhmmss
+=item * 5.3.1.1
 
-=head3 5.3.1.2
+=over 8
 
-    hhmm
-    hh
+=item hhmmss
 
-=head3 5.3.1.4
+=back
 
-    -mmss
-    -mm
-    --ss
+=item * 5.3.1.2
+
+=over 8
+
+=item hhmm
+
+=item hh
+
+=back
+
+=item * 5.3.1.4
+
+=over 8
+
+=item -mmss
+
+=item -mm
+
+=item --ss
+
+=back
+
+=back
 
 =head1 STANDARDS DOCUMENT
 
