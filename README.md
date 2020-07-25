@@ -404,10 +404,9 @@ The source code repository for DateTime-Format-ISO8601 can be found at [https://
 - Joshua Hoblitt <josh@hoblitt.com>
 - Dave Rolsky <autarch@urth.org>
 
-# CONTRIBUTORS
+# CONTRIBUTOR
 
-- joe <draxil@gmail.com>
-- Joshua Hoblitt <jhoblitt@cpan.org>
+joe <draxil@gmail.com>
 
 # COPYRIGHT AND LICENSE
 

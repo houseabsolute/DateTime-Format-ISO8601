@@ -4,7 +4,7 @@ package DateTime::Format::ISO8601;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Carp qw( croak );
 use DateTime 0.18;
