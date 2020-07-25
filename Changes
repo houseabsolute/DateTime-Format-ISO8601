@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+* Fixed a bug introduced in 0.09 where calling parse_datetime() as a class
+  method with some formats would throw an exception.
+
+
 0.09     2020-07-25 (TRIAL RELEASE)
 
 * Add a format_datetime() method, which makes this class play nicer with

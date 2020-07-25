@@ -884,7 +884,7 @@ DateTime::Format::Builder->create_class(
 sub _fix_1_digit_year {
     my %p = @_;
 
-    my $year = ( $p{self}{base_datetime} || DateTime->now )->year;
+    my $year = _base_dt( $p{self} )->year;
 
     $year =~ s/.$//;
     $p{parsed}{year} = $year . $p{parsed}{year};
@@ -925,7 +925,7 @@ sub _fix_2_digit_year {
 sub _add_minute {
     my %p = @_;
 
-    $p{parsed}{minute} = ( $p{self}{base_datetime} || DateTime->now )->minute;
+    $p{parsed}{minute} = _base_dt( $p{self} )->minute;
 
     return 1;
 }
@@ -933,7 +933,7 @@ sub _add_minute {
 sub _add_hour {
     my %p = @_;
 
-    $p{parsed}{hour} = ( $p{self}{base_datetime} || DateTime->now )->hour;
+    $p{parsed}{hour} = _base_dt( $p{self} )->hour;
 
     return 1;
 }
@@ -941,7 +941,7 @@ sub _add_hour {
 sub _add_day {
     my %p = @_;
 
-    $p{parsed}{day} = ( $p{self}{base_datetime} || DateTime->now )->day;
+    $p{parsed}{day} = _base_dt( $p{self} )->day;
 
     return 1;
 }
@@ -949,7 +949,7 @@ sub _add_day {
 sub _add_week {
     my %p = @_;
 
-    $p{parsed}{week} = ( $p{self}{base_datetime} || DateTime->now )->week;
+    $p{parsed}{week} = _base_dt( $p{self} )->week;
 
     return 1;
 }
@@ -957,7 +957,7 @@ sub _add_week {
 sub _add_month {
     my %p = @_;
 
-    $p{parsed}{month} = ( $p{self}{base_datetime} || DateTime->now )->month;
+    $p{parsed}{month} = _base_dt( $p{self} )->month;
 
     return 1;
 }
@@ -965,9 +965,14 @@ sub _add_month {
 sub _add_year {
     my %p = @_;
 
-    $p{parsed}{year} = ( $p{self}{base_datetime} || DateTime->now )->year;
+    $p{parsed}{year} = _base_dt( $p{self} )->year;
 
     return 1;
+}
+
+sub _base_dt {
+    return $_[0]{base_datetime} if ref $_[0] && $_[0]{base_datetime};
+    return DateTime->now;
 }
 
 sub _fractional_second {
