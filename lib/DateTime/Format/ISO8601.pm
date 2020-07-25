@@ -1101,10 +1101,10 @@ This module accepts no arguments to it's C<import> method.
 Accepts an optional hash.
 
     my $iso8601 = DateTime::Format::ISO8601->new(
-                    base_datetime => $dt,
-                    cut_off_year  => 42,
-                    legacy_year   => 1,
-                );
+        base_datetime => $dt,
+        cut_off_year  => 42,
+        legacy_year   => 1,
+    );
 
 =over 4
 
@@ -1159,7 +1159,7 @@ from incomplete date/time formats.
 Returns a integer representing the cut-off point between interpreting
 2-digits years as 19xx or 20xx.
 
-=item * set_cut_off_year( $int )
+=item * set_cut_off_year($int)
 
 Accepts a integer representing the cut-off point between interpreting
 2-digits years as 19xx or 20xx.
@@ -1171,7 +1171,7 @@ Accepts a integer representing the cut-off point between interpreting
 
 Returns a boolean value indicating the 2-digit year handling behavior.
 
-=item * set_legacy_year( $bool )
+=item * set_legacy_year($bool)
 
 Accepts a boolean value controlling if a 2-digit year is interpreted as being
 in the current century (unless a C<base_datetime> is set) or if
@@ -1183,14 +1183,14 @@ C<cut_off_year> should be used to place the year in either 20xx or 19xx.
 
 =over 4
 
-=item * DefaultCutOffYear( $int )
+=item * DefaultCutOffYear($int)
 
 Accepts a integer representing the cut-off point for 2-digit years when
 calling C<parse_*> as class methods and the default value for C<cut_off_year>
 when creating objects. If called with no parameters this method will return
 the default value for C<cut_off_year>.
 
-=item * DefaultLegacyYear( $bool )
+=item * DefaultLegacyYear($bool)
 
 Accepts a boolean value controlling the legacy year behavior when calling
 C<parse_*> as class methods and the default value for C<legacy_year> when
@@ -1219,7 +1219,7 @@ This may be called as either class or object method.
 
 =over 4
 
-=item * format_datetime( $dt )
+=item * format_datetime($dt)
 
 Formats the datetime in an ISO8601-compatible format. This differs from
 L<DateTime/iso8601> by including nanoseconds/milliseconds and the correct
