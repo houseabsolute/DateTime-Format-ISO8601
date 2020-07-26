@@ -9,46 +9,42 @@ our $VERSION = '0.11';
 use Carp qw( croak );
 use DateTime 0.18;
 use DateTime::Format::Builder 0.77;
-use Params::Validate qw( validate validate_pos BOOLEAN OBJECT SCALAR );
+use DateTime::Format::ISO8601::Types;
+use Params::ValidationCompiler 0.26 qw( validation_for );
 
 {
+    my $validator = validation_for(
+        name             => 'DefaultLegacyYear',
+        name_is_optional => 1,
+        params           => [ { type => t('Bool') } ],
+    );
+
     my $default_legacy_year;
 
     sub DefaultLegacyYear {
         shift;
-
-        ($default_legacy_year) = validate_pos(
-            @_,
-            {
-                type      => BOOLEAN,
-                callbacks => {
-                    'is 0, 1, or undef' =>
-                        sub { !defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
-                },
-            }
-        ) if @_;
+        ($default_legacy_year) = $validator->(@_)
+            if @_;
 
         return $default_legacy_year;
     }
 }
+
 __PACKAGE__->DefaultLegacyYear(1);
 
 {
+    my $validator = validation_for(
+        name             => 'DefaultCutOffYear',
+        name_is_optional => 1,
+        params           => [ { type => t('CutOffYear') } ],
+    );
+
     my $default_cut_off_year;
 
     sub DefaultCutOffYear {
         shift;
-
-        ($default_cut_off_year) = validate_pos(
-            @_,
-            {
-                type      => SCALAR,
-                callbacks => {
-                    'is between 0 and 99' =>
-                        sub { $_[0] >= 0 && $_[0] <= 99 },
-                },
-            }
-        ) if @_;
+        ($default_cut_off_year) = $validator->(@_)
+            if @_;
 
         return $default_cut_off_year;
     }
@@ -57,45 +53,45 @@ __PACKAGE__->DefaultLegacyYear(1);
 # the same default value as DT::F::Mail
 __PACKAGE__->DefaultCutOffYear(49);
 
-sub new {
-    my ($class) = shift;
-
-    my %args = validate(
-        @_,
-        {
+{
+    my $validator = validation_for(
+        name             => '_check_new_params',
+        name_is_optional => 1,
+        params           => {
             base_datetime => {
-                type     => OBJECT,
-                can      => 'utc_rd_values',
+                type     => t('DateTimeIsh'),
                 optional => 1,
             },
             legacy_year => {
-                type      => BOOLEAN,
-                default   => $class->DefaultLegacyYear,
-                callbacks => {
-                    'is 0, 1, or undef' =>
-                        sub { !defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
-                },
+                type     => t('Bool'),
+                optional => 1,
             },
             cut_off_year => {
-                type      => SCALAR,
-                default   => $class->DefaultCutOffYear,
-                callbacks => {
-                    'is between 0 and 99' =>
-                        sub { $_[0] >= 0 && $_[0] <= 99 },
-                },
+                type     => t('CutOffYear'),
+                optional => 1,
             },
-        }
+        },
     );
 
-    $class = ref($class) || $class;
+    sub new {
+        my ($class) = shift;
+        my %args = $validator->(@_);
 
-    my $self = bless( \%args, $class );
+        $args{legacy_year} = $class->DefaultLegacyYear
+            unless exists $args{legacy_year};
+        $args{cut_off_year} = $class->DefaultCutOffYear
+            unless exists $args{cut_off_year};
 
-    if ( $args{base_datetime} ) {
-        $self->set_base_datetime( object => $args{base_datetime} );
+        $class = ref($class) || $class;
+
+        my $self = bless( \%args, $class );
+
+        if ( $args{base_datetime} ) {
+            $self->set_base_datetime( object => $args{base_datetime} );
+        }
+
+        return ($self);
     }
-
-    return ($self);
 }
 
 # lifted from DateTime
@@ -103,105 +99,104 @@ sub clone { bless { %{ $_[0] } }, ref $_[0] }
 
 sub base_datetime { $_[0]->{base_datetime} }
 
-sub set_base_datetime {
-    my $self = shift;
-
-    my %args = validate(
-        @_,
-        {
-            object => {
-                type => OBJECT,
-                can  => 'utc_rd_values',
-            },
-        }
+{
+    my $validator = validation_for(
+        name             => 'set_base_datetime',
+        name_is_optional => 1,
+        params           => {
+            object => { type => t('DateTimeIsh') },
+        },
     );
 
-    # ISO8601 only allows years 0 to 9999
-    # this implementation ignores the needs of expanded formats
-    my $dt          = DateTime->from_object( object => $args{object} );
-    my $lower_bound = DateTime->new( year => 0 );
-    my $upper_bound = DateTime->new( year => 10000 );
+    sub set_base_datetime {
+        my $self = shift;
 
-    if ( $dt < $lower_bound ) {
-        croak 'base_datetime must be greater then or equal to ',
-            $lower_bound->iso8601;
+        my %args = $validator->(@_);
+
+        # ISO8601 only allows years 0 to 9999
+        # this implementation ignores the needs of expanded formats
+        my $dt          = DateTime->from_object( object => $args{object} );
+        my $lower_bound = DateTime->new( year => 0 );
+        my $upper_bound = DateTime->new( year => 10000 );
+
+        if ( $dt < $lower_bound ) {
+            croak 'base_datetime must be greater then or equal to ',
+                $lower_bound->iso8601;
+        }
+        if ( $dt >= $upper_bound ) {
+            croak 'base_datetime must be less then ', $upper_bound->iso8601;
+        }
+
+        $self->{base_datetime} = $dt;
+
+        return $self;
     }
-    if ( $dt >= $upper_bound ) {
-        croak 'base_datetime must be less then ', $upper_bound->iso8601;
-    }
-
-    $self->{base_datetime} = $dt;
-
-    return $self;
 }
 
 sub legacy_year { $_[0]->{legacy_year} }
 
-sub set_legacy_year {
-    my $self = shift;
-
-    my @args = validate_pos(
-        @_,
-        {
-            type      => BOOLEAN,
-            callbacks => {
-                'is 0, 1, or undef' =>
-                    sub { !defined( $_[0] ) || $_[0] == 0 || $_[0] == 1 },
-            },
-        }
+{
+    my $validator = validation_for(
+        name             => 'set_legacy_year',
+        name_is_optional => 1,
+        params           => [ { type => t('Bool') } ],
     );
 
-    $self->{legacy_year} = $args[0];
+    sub set_legacy_year {
+        my $self = shift;
 
-    return $self;
+        ( $self->{legacy_year} ) = $validator->(@_);
+
+        return $self;
+    }
 }
 
 sub cut_off_year { $_[0]->{cut_off_year} }
 
-sub set_cut_off_year {
-    my $self = shift;
-
-    my @args = validate_pos(
-        @_,
-        {
-            type      => SCALAR,
-            callbacks => {
-                'is between 0 and 99' => sub { $_[0] >= 0 && $_[0] <= 99 },
-            },
-        }
+{
+    my $validator = validation_for(
+        name             => 'set_cut_off_year',
+        name_is_optional => 1,
+        params           => [ { type => t('CutOffYear') } ],
     );
 
-    $self->{cut_off_year} = $args[0];
+    sub set_cut_off_year {
+        my $self = shift;
 
-    return $self;
+        ( $self->{cut_off_year} ) = $validator->(@_);
+
+        return $self;
+    }
 }
 
-sub format_datetime {
-    my $self = shift;
-    my ($dt) = validate_pos(
-        @_,
-        {
-            type => OBJECT,
-            isa  => 'DateTime',
-        }
+{
+    my $validator = validation_for(
+        name             => 'format_datetime',
+        name_is_optional => 1,
+        params           => [ { type => t('DateTime') } ],
     );
 
-    my $cldr
-        = $dt->nanosecond % 1000000 ? 'yyyy-MM-ddTHH:mm:ss.SSSSSSSSS'
-        : $dt->nanosecond           ? 'yyyy-MM-ddTHH:mm:ss.SSS'
-        :                             'yyyy-MM-ddTHH:mm:ss';
+    sub format_datetime {
+        my $self = shift;
+        my ($dt) = $validator->(@_);
 
-    my $tz;
-    if ( $dt->time_zone->is_utc ) {
-        $tz = 'Z';
-    }
-    else {
-        my $offset = $dt->time_zone->offset_for_datetime($dt);
-        $tz = DateTime::TimeZone->offset_as_string($offset);
-        substr $tz, 3, 0, ':';
-    }
+        my $cldr
+            = $dt->nanosecond % 1000000 ? 'yyyy-MM-ddTHH:mm:ss.SSSSSSSSS'
+            : $dt->nanosecond           ? 'yyyy-MM-ddTHH:mm:ss.SSS'
+            :                             'yyyy-MM-ddTHH:mm:ss';
 
-    return $dt->format_cldr($cldr) . $tz;
+        my $tz;
+        if ( $dt->time_zone->is_utc ) {
+            $tz = 'Z';
+        }
+        else {
+            my $offset = $dt->time_zone->offset_for_datetime($dt);
+            $tz = DateTime::TimeZone->offset_as_string($offset);
+            substr $tz, 3, 0, ':';
+        }
+
+        return $dt->format_cldr($cldr) . $tz;
+    }
 }
 
 DateTime::Format::Builder->create_class(

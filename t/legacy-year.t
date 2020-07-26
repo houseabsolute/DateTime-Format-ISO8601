@@ -28,7 +28,7 @@ for my $n ( 0, 1, undef ) {
 for my $n ( -3 .. -1, 2 .. 4 ) {
     like(
         dies { DateTime::Format::ISO8601->DefaultLegacyYear($n) },
-        qr/did not pass the 'is 0, 1, or undef' callback/,
+        qr/Validation failed for type named Bool/,
         'set legacy year to invalid value',
     );
 }
@@ -48,13 +48,13 @@ for my $n ( 0, 1, undef ) {
 for my $n ( -3 .. -1, 2 .. 4 ) {
     like(
         dies { DateTime::Format::ISO8601->new( legacy_year => $n ) },
-        qr/did not pass the 'is 0, 1, or undef' callback/,
+        qr/Validation failed for type named Bool/,
         'pass invalid legacy year to constructor',
     );
 
     like(
         dies { DateTime::Format::ISO8601->new->set_legacy_year($n) },
-        qr/did not pass the 'is 0, 1, or undef' callback/,
+        qr/Validation failed for type named Bool/,
         'pass invalid legacy year to set_legacy_year',
     );
 }

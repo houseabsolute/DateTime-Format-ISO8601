@@ -40,7 +40,7 @@ for my $n (
 ) {
     like(
         dies { DateTime::Format::ISO8601->DefaultCutOffYear($n) },
-        qr/did not pass the 'is between 0 and 99' callback/,
+        qr/Validation failed for type named CutOffYear/,
         'invalid cutoff year',
     );
 }
@@ -70,13 +70,13 @@ for my $n ( 0 .. 99 ) {
 for my $n ( -3 .. -1, 100 .. 102 ) {
     like(
         dies { DateTime::Format::ISO8601->new( cut_off_year => $n ) },
-        qr/did not pass the 'is between 0 and 99' callback/,
+        qr/Validation failed for type named CutOffYear/,
         'cut_off_year value out of range',
     );
 
     like(
         dies { DateTime::Format::ISO8601->new->set_cut_off_year($n) },
-        qr/did not pass the 'is between 0 and 99' callback/,
+        qr/Validation failed for type named CutOffYear/,
         'set_cut_off_year() value out of range',
     );
 }

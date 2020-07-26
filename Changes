@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+* Replace Params::Validate with Params::ValidationCompiler.
+
+
 0.10     2020-07-25 (TRIAL RELEASE)
 
 * Fixed a bug introduced in 0.09 where calling parse_datetime() as a class
