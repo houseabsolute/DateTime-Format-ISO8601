@@ -3,6 +3,7 @@ package DateTime::Format::ISO8601;
 
 use strict;
 use warnings;
+use namespace::autoclean;
 
 our $VERSION = '0.11';
 
