@@ -4,7 +4,13 @@
 requires "Carp" => "0";
 requires "DateTime" => "0.18";
 requires "DateTime::Format::Builder" => "0.77";
-requires "Params::Validate" => "0";
+requires "Params::ValidationCompiler" => "0.26";
+requires "Specio" => "0.18";
+requires "Specio::Declare" => "0";
+requires "Specio::Exporter" => "0";
+requires "Specio::Library::Builtins" => "0";
+requires "namespace::autoclean" => "0";
+requires "parent" => "0";
 requires "strict" => "0";
 requires "warnings" => "0";
 
