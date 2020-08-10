@@ -347,7 +347,7 @@ DateTime::Format::Builder->create_class(
                 #YYYY-Www-D 1985-W15-5
                 length      => [qw( 8 10 )],
                 regex       => qr/^ (\d{4}) -?? W (\d\d) -?? (\d) $/x,
-                params      => [qw( year week day_of_year )],
+                params      => [qw( year week day_of_week )],
                 postprocess => [ \&_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -365,7 +365,7 @@ DateTime::Format::Builder->create_class(
                 #YY-Www-D 85-W15-5
                 length      => [qw( 6 8 )],
                 regex       => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
-                params      => [qw( year week day_of_year )],
+                params      => [qw( year week day_of_week )],
                 postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -383,7 +383,7 @@ DateTime::Format::Builder->create_class(
                 #-Y-Www-D -5-W15-5
                 length      => [qw( 6 8 )],
                 regex       => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
-                params      => [qw( year week day_of_year )],
+                params      => [qw( year week day_of_week )],
                 postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -401,7 +401,7 @@ DateTime::Format::Builder->create_class(
                 #-Www-D -W15-5
                 length      => [qw( 5 6 )],
                 regex       => qr/^ - W (\d\d) -?? (\d) $/x,
-                params      => [qw( week day_of_year )],
+                params      => [qw( week day_of_week )],
                 postprocess => [ \&_add_year, \&_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -417,7 +417,7 @@ DateTime::Format::Builder->create_class(
                 #-W-D -W-5
                 length      => 4,
                 regex       => qr/^ - W - (\d) $/x,
-                params      => [qw( day_of_year )],
+                params      => [qw( day_of_week )],
                 postprocess => [
                     \&_add_year,
                     \&_add_week,
@@ -430,7 +430,7 @@ DateTime::Format::Builder->create_class(
                 #+[YY]YYYY-Www-D +001985-W15-5
                 length      => [qw( 11 13 )],
                 regex       => qr/^ \+ (\d{6}) -?? W (\d\d) -?? (\d) $/x,
-                params      => [qw( year week day_of_year )],
+                params      => [qw( year week day_of_week )],
                 postprocess => [ \&_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -797,7 +797,7 @@ DateTime::Format::Builder->create_class(
                 length => [qw( 18 19 )],
                 regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d)
                             T (\d\d) :?? (\d\d) ([+-] \d{2,4}) $/x,
-                params => [qw( year week day_of_year hour minute time_zone)],
+                params => [qw( year week day_of_week hour minute time_zone)],
                 postprocess => [ \&_normalize_week, \&_normalize_offset ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -1013,33 +1013,42 @@ sub _normalize_offset {
 sub _normalize_week {
     my %p = @_;
 
-    # from section 4.3.2.2
-    # "A calendar week is identified within a calendar year by the calendar
-    # week number. This is its ordinal position within the year, applying the
-    # rule that the first calendar week of a year is the one that includes the
-    # first Thursday of that year and that the last calendar week of a
-    # calendar year is the week immediately preceding the first calendar week
-    # of the next calendar year."
+    # See
+    # https://en.wikipedia.org/wiki/ISO_week_date#Calculating_an_ordinal_or_month_date_from_a_week_date
+    # for the algorithm we're using here.
+    my $od = $p{parsed}{week} * 7;
+    $od += ( exists $p{parsed}{day_of_week} ? $p{parsed}{day_of_week} : 1 );
+    $od -= DateTime->new(
+        year  => $p{parsed}{year},
+        month => 1,
+        day   => 4,
+    )->day_of_week + 3;
 
-    # this make it oh so fun to covert an ISO week number to a count of days
-
-    my $dt = DateTime->new(
-        year => $p{parsed}{year},
-    );
-
-    if ( $dt->week_number == 1 ) {
-        $p{parsed}{week} -= 1;
+    my ( $year, $day_of_year );
+    if ( $od < 1 ) {
+        $year        = $p{parsed}{year} - 1;
+        $day_of_year = DateTime->new( year => $year )->year_length + $od;
+    }
+    else {
+        my $year_length
+            = DateTime->new( year => $p{parsed}{year} )->year_length;
+        if ( $od > $year_length ) {
+            $year        = $p{parsed}{year} + 1;
+            $day_of_year = $od - $year_length;
+        }
+        else {
+            $year        = $p{parsed}{year};
+            $day_of_year = $od;
+        }
     }
 
-    $p{parsed}{week} *= 7;
-
-    if ( defined $p{parsed}{day_of_year} ) {
-        $p{parsed}{week} -= $dt->day_of_week - 1;
-    }
-
-    $p{parsed}{day_of_year} += $p{parsed}{week};
+    # We need to leave the references in $p{parsed} as is. We cannot create a
+    # new reference.
+    $p{parsed}{year}        = $year;
+    $p{parsed}{day_of_year} = $day_of_year;
 
     delete $p{parsed}{week};
+    delete $p{parsed}{day_of_week};
 
     return 1;
 }

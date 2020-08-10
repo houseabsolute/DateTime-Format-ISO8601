@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+* Fixed handling of ISO week parsing in some years. Reported by Kent
+  Fredric. GH #6.
+
+
 0.11     2020-07-26 (TRIAL RELEASE)
 
 * Replace Params::Validate with Params::ValidationCompiler.
