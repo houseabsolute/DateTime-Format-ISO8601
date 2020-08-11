@@ -26,13 +26,19 @@
   Klausner. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/3
 
 
-0.07 2010-01-17
+0.08     2012-02-11
+
+* rt.cpan.org #52645 : UTC offsets must be in the same format (basic|extended)
+  as the time as to which it is attached.
+
+
+0.07     2010-01-17
 
 * fix test failures caused by tests using DateTime->now(), all tests should
   now pass regardless of the "wallclock" when they are being run
 
 
-0.06 2007-04-10
+0.06     2007-04-10
 
 * add Test::Distribution tests
 
@@ -40,12 +46,12 @@
   0.05
 
 
-0.05 2007-03-27
+0.05     2007-03-27
 
 * disable a test that may fail depending on the localtime date
 
 
-0.0403 2005-08-07
+0.0403   2005-08-07
 
 * update doc format
 
@@ -58,17 +64,17 @@
 * tidy test sources and reduce runtime
 
 
-0.0402 2004-10-28
+0.0402   2004-10-28
 
 * add 8 missing formats, patch by Kelly McCauley
 
 
-0.0401 2004-02-08
+0.0401   2004-02-08
 
 * fix test for -DDD format as reported by Jonathan Leffler <jleffler _AT_ earthlink.net>
 
 
-0.04 2003-11-15
+0.04     2003-11-15
 
 * require DT 0.18 and DT::F::B 0.77
 
@@ -103,7 +109,7 @@
 * add set_legacy_year()
 
 
-0.03 2003-07-03
+0.03     2003-07-03
 
 * require DT::F::B 0.75
 
@@ -122,7 +128,7 @@
 * doc update
 
 
-0.02 2003-06-26
+0.02     2003-06-26
 
 * require DT 0.13 and DT::F::B 0.74
 
@@ -137,6 +143,6 @@
 * bug fix for _add_minute()
 
 
-0.01 2003-06-21
+0.01     2003-06-21
 
 * support ISO8601 date/time formats
