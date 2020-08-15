@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.12     2020-08-15
+
 * Fixed handling of ISO week parsing in some years. Reported by Kent
   Fredric. GH #6.
 
