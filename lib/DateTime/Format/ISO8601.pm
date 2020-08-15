@@ -780,6 +780,25 @@ DateTime::Format::Builder->create_class(
                 extra  => { time_zone => 'floating' },
             },
             {
+                #YYYYMMDDThhmmZ 19850412T1015
+                #YYYY-MM-DDThh:mmZ 1985-04-12T10:15
+                length => [qw( 14 17 )],
+                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
+                            T (\d\d) :?? (\d\d) Z $/x,
+                params => [qw( year month day hour minute )],
+                extra  => { time_zone => 'UTC' },
+            },
+            {
+                #YYYYDDDThhmm 1985102T1015
+                #YYYY-DDDThh:mm 1985-102T10:15
+                length => [qw( 12 14 )],
+                regex  => qr/^ (\d{4}) -??  (\d{3}) T
+                            (\d\d) :?? (\d\d) $/x,
+                params      => [qw( year day_of_year hour minute )],
+                extra       => { time_zone => 'floating' },
+                constructor => [ 'DateTime', 'from_day_of_year' ],
+            },
+            {
                 #YYYYDDDThhmmZ 1985102T1015Z
                 #YYYY-DDDThh:mmZ 1985-102T10:15Z
                 length => [qw( 13 15 )],
@@ -1549,13 +1568,23 @@ Values can optionally be prefixed with 'T'.
 
 =back
 
-=item * Support for this section is not complete.
+=item * 5.4.3
+
+Support for this section is not complete.
 
 =over 8
 
 =item YYYYMMDDThhmm
 
 =item YYYY-MM-DDThh:mm
+
+=item YYYYMMDDThhmmZ
+
+=item YYYY-MM-DDThh:mmZ
+
+=item YYYYDDDThhmm
+
+=item YYYY-DDDThh:mm
 
 =item YYYYDDDThhmmZ
 
