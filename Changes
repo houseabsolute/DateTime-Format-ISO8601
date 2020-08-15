@@ -3,6 +3,23 @@
 * Fixed handling of ISO week parsing in some years. Reported by Kent
   Fredric. GH #6.
 
+* This release includes changes from 0.09-0.11 trial releases to switch from
+  Params::Validate and Params::ValidationCompiler. Relevant release notes from
+  those trial releases are repeated here for clarity.
+
+* Replace Params::Validate with Params::ValidationCompiler.
+
+* Fixed a bug introduced in 0.09 where calling parse_datetime() as a class
+  method with some formats would throw an exception.
+
+* Add a format_datetime() method, which makes this class play nicer with
+  DateTime.pm. Implemented by Doug
+  Bell. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/2
+
+* Add support for the `YYYY-MM-DDThh:mm:ss.ss[+-]hh` and
+  `YYYYMMDDThhmmss.ss[+-]hh` formats. Implemented by Thomas
+  Klausner. https://github.com/jhoblitt/DateTime-Format-ISO8601/pull/3
+
 
 0.11     2020-07-26 (TRIAL RELEASE)
 
