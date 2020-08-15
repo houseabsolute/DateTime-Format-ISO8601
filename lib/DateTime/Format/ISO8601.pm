@@ -191,9 +191,8 @@ sub cut_off_year { $_[0]->{cut_off_year} }
             $tz = 'Z';
         }
         else {
-            my $offset = $dt->time_zone->offset_for_datetime($dt);
-            $tz = DateTime::TimeZone->offset_as_string($offset);
-            substr $tz, 3, 0, ':';
+            $tz = q{};
+            $cldr .= 'ZZZZZ';
         }
 
         return $dt->format_cldr($cldr) . $tz;
