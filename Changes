@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.13     2020-08-15
+
 * Added support for a few more incomplete formats, YYYYMMDDThhmmZ,
   YYYY-MM-DDThh:mmZ, YYYYDDDThhmm, YYYY-DDDThh:mm. Includes a patch from
   Stuart Browne. Fixed GH #3.

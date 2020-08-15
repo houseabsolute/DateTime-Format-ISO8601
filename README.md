@@ -4,7 +4,7 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 # VERSION
 
-version 0.12
+version 0.13
 
 # SYNOPSIS
 
@@ -298,9 +298,16 @@ which they appear.
     - YYYY-MM-DDThh:mm:ss.ss\[+-\]hh
     - YYYYMMDDThhmmss.ss\[+-\]hhmm
     - YYYY-MM-DDThh:mm:ss.ss\[+-\]hh:mm
-- Support for this section is not complete.
+- 5.4.3
+
+    Support for this section is not complete.
+
     - YYYYMMDDThhmm
     - YYYY-MM-DDThh:mm
+    - YYYYMMDDThhmmZ
+    - YYYY-MM-DDThh:mmZ
+    - YYYYDDDThhmm
+    - YYYY-DDDThh:mm
     - YYYYDDDThhmmZ
     - YYYY-DDDThh:mmZ
     - YYYYWwwDThhmm\[+-\]hhmm
