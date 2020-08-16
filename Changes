@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+* Require DateTime 1.45, which added a year_length() method that this package
+  is now using. Reported by Slaven Rezić. GH #11.
+
+
 0.13     2020-08-15
 
 * Added support for a few more incomplete formats, YYYYMMDDThhmmZ,

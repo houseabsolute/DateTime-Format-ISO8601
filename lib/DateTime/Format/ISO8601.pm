@@ -8,7 +8,7 @@ use namespace::autoclean;
 our $VERSION = '0.14';
 
 use Carp qw( croak );
-use DateTime 0.18;
+use DateTime 1.45;
 use DateTime::Format::Builder 0.77;
 use DateTime::Format::ISO8601::Types;
 use Params::ValidationCompiler 0.26 qw( validation_for );
