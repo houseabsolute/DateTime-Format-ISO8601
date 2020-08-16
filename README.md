@@ -4,7 +4,7 @@ DateTime::Format::ISO8601 - Parses ISO8601 formats
 
 # VERSION
 
-version 0.13
+version 0.14
 
 # SYNOPSIS
 

@@ -19,7 +19,7 @@ my %WriteMakefileArgs = (
   "NAME" => "DateTime::Format::ISO8601",
   "PREREQ_PM" => {
     "Carp" => 0,
-    "DateTime" => "0.18",
+    "DateTime" => "1.45",
     "DateTime::Format::Builder" => "0.77",
     "Params::ValidationCompiler" => "0.26",
     "Specio" => "0.18",
@@ -45,7 +45,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Carp" => 0,
-  "DateTime" => "0.18",
+  "DateTime" => "1.45",
   "DateTime::Format::Builder" => "0.77",
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
