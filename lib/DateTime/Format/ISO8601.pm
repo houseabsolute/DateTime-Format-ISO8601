@@ -1090,7 +1090,7 @@ __END__
     use DateTime::Format::ISO8601;
 
     my $datetime_str = '2020-07-25T11:32:31';
-    my $dt       = DateTime::Format::ISO8601->parse_datetime($datetime_str);
+    my $dt = DateTime::Format::ISO8601->parse_datetime($datetime_str);
     say $dt;
 
     # This format is ambiguous and could be either a date or time, so use the
