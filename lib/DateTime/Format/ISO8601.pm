@@ -1089,18 +1089,26 @@ __END__
 
     use DateTime::Format::ISO8601;
 
-    my $str = '2020-07-25T11:32:31';
+    my $datetime_str = '2020-07-25T11:32:31';
+    my $dt       = DateTime::Format::ISO8601->parse_datetime($datetime_str);
+    say $dt;
 
-    my $dt = DateTime::Format::ISO8601->parse_datetime($str);
-    $dt = DateTime::Format::ISO8601->parse_time($str);
+    # This format is ambiguous and could be either a date or time, so use the
+    # parse_time method.
+    my $time_str = '113231';
+    $dt = DateTime::Format::ISO8601->parse_time($time_str);
+    say $dt;
 
     # or
 
     my $iso8601 = DateTime::Format::ISO8601->new;
-    $dt = $iso8601->parse_datetime($str);
-    $dt = $iso8601->parse_time($str);
+    $dt = $iso8601->parse_datetime($datetime_str);
+    say $dt;
 
-    $str = DateTime::Format::ISO8601->format_datetime($dt);
+    $dt = $iso8601->parse_time($time_str);
+    say $dt;
+
+    say DateTime::Format::ISO8601->format_datetime($dt);
 
 =head1 DESCRIPTION
 
