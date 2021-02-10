@@ -698,7 +698,15 @@ DateTime::Format::Builder->create_class(
                     \&_fractional_second,
                 ],
             },
-
+            {
+                #YYYYMMDDThhmm[+-]hhmm 19850412T1015+0400
+                #YYYY-MM-DDThh:mm[+-]hh:mm 1985-04-12T10:15+04:00
+                length => [qw( 18 22 )],
+                regex  => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d)
+                             T (\d\d) :?? (\d\d) ([+-] \d\d :?? \d\d) $/x,
+                params      => [qw( year month day hour minute time_zone )],
+                postprocess => \&_normalize_offset,
+            },
             {
                 #YYYYMMDDThhmmss[+-]hhmm 19850412T101530+0400
                 #YYYY-MM-DDThh:mm:ss[+-]hh:mm 1985-04-12T10:15:30+04:00
