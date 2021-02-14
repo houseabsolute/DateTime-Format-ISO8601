@@ -1,11 +1,11 @@
-*~
-.\#*
-.build
 /*\.bs
 /*\.c
 /*\.o
 /.tidyall.d
 /test-mydeps-*
+*~
+.\#*
+.build
 Build
 Build.PL
 DateTime-Format-ISO8601-*

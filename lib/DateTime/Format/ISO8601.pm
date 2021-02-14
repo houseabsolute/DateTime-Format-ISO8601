@@ -1112,8 +1112,8 @@ __END__
 
 =head1 DESCRIPTION
 
-Parses almost all ISO8601 date and time formats. ISO8601 time-intervals will
-be supported in a later release.
+Parses almost all ISO8601 date and time formats. ISO8601 time-intervals will be
+supported in a later release.
 
 =head1 METHODS
 
@@ -1142,8 +1142,8 @@ This key is optional.
 
 =item * cut_off_year
 
-A integer representing the cut-off point between interpreting 2-digits years
-as 19xx or 20xx.
+A integer representing the cut-off point between interpreting 2-digits years as
+19xx or 20xx.
 
     2-digit years <  cut_off_year will be interpreted as 20xx
     2-digit years >= cut_off_year will be untreated as 19xx
@@ -1153,8 +1153,8 @@ This key defaults to the value of C<DefaultCutOffYear>.
 =item * legacy_year
 
 A boolean value controlling if a 2-digit year is interpreted as being in the
-current century (unless a C<base_datetime> is set) or if C<cut_off_year>
-should be used to place the year in either 20xx or 19xx.
+current century (unless a C<base_datetime> is set) or if C<cut_off_year> should
+be used to place the year in either 20xx or 19xx.
 
 If this is true, then the C<cut_off_year> is used. If this is false, then the
 year is always interpreted as being in the current century.
@@ -1180,13 +1180,13 @@ from incomplete date/time formats.
 
 =head3 $iso8601->cut_off_year
 
-Returns a integer representing the cut-off point between interpreting
-2-digits years as 19xx or 20xx.
+Returns a integer representing the cut-off point between interpreting 2-digits
+years as 19xx or 20xx.
 
 =head3 $iso8601->set_cut_off_year($int)
 
-Accepts a integer representing the cut-off point between interpreting
-2-digits years as 19xx or 20xx.
+Accepts a integer representing the cut-off point between interpreting 2-digits
+years as 19xx or 20xx.
 
     2-digit years <  legacy_year will be interpreted as 20xx
     2-digit years >= legacy_year will be interpreted as 19xx
@@ -1198,17 +1198,17 @@ Returns a boolean value indicating the 2-digit year handling behavior.
 =head3 $iso8601->set_legacy_year($bool)
 
 Accepts a boolean value controlling if a 2-digit year is interpreted as being
-in the current century (unless a C<base_datetime> is set) or if
-C<cut_off_year> should be used to place the year in either 20xx or 19xx.
+in the current century (unless a C<base_datetime> is set) or if C<cut_off_year>
+should be used to place the year in either 20xx or 19xx.
 
 =head2 Class Methods
 
 =head3 DateTime::Format::ISO8601->DefaultCutOffYear($int)
 
-Accepts a integer representing the cut-off point for 2-digit years when
-calling C<parse_*> as class methods and the default value for C<cut_off_year>
-when creating objects. If called with no parameters this method will return
-the default value for C<cut_off_year>.
+Accepts a integer representing the cut-off point for 2-digit years when calling
+C<parse_*> as class methods and the default value for C<cut_off_year> when
+creating objects. If called with no parameters this method will return the
+default value for C<cut_off_year>.
 
 =head3 DateTime::Format::ISO8601->DefaultLegacyYear($bool)
 
@@ -1239,10 +1239,10 @@ timezone offset.
 
 =head1 FORMATS
 
-There are 6 strings that can match against date only or time only formats.
-The C<parse_datetime> method will attempt to match these ambiguous strings
-against date only formats. If you want to match against the time only formats
-use the C<parse_time> method.
+There are 6 strings that can match against date only or time only formats. The
+C<parse_datetime> method will attempt to match these ambiguous strings against
+date only formats. If you want to match against the time only formats use the
+C<parse_time> method.
 
 =head2 Conventions
 
@@ -1250,14 +1250,14 @@ use the C<parse_time> method.
 
 =item * Expanded ISO8601
 
-These formats are supported with exactly 6 digits for the year.
-Support for a variable number of digits will be in a later release.
+These formats are supported with exactly 6 digits for the year. Support for a
+variable number of digits will be in a later release.
 
 =item * Precision
 
-If a format doesn't include a year all larger time unit up to and including
-the year are filled in using the current date/time or [if set] the
-C<base_datetime> object.
+If a format doesn't include a year all larger time unit up to and including the
+year are filled in using the current date/time or [if set] the C<base_datetime>
+object.
 
 =item * Fractional time
 
@@ -1267,8 +1267,8 @@ There is no limit on the expressed precision.
 
 =head2 Supported via parse_datetime
 
-The supported formats are listed by the section of ISO 8601:2000(E) in
-which they appear.
+The supported formats are listed by the section of ISO 8601:2000(E) in which
+they appear.
 
 =head3 5.2 Dates
 
@@ -1665,14 +1665,13 @@ Values can optionally be prefixed with 'T'.
 
 =head1 CREDITS
 
-Iain 'Spoon' Truskett (SPOON) who wrote L<DateTime::Format::Builder>.
-That has grown into I<The Vacuum Energy Powered C<Swiss Army> Katana>
-of date and time parsing. This module was inspired by and conceived
-in honor of Iain's work.
+Iain 'Spoon' Truskett (SPOON) who wrote L<DateTime::Format::Builder>. That has
+grown into I<The Vacuum Energy Powered C<Swiss Army> Katana> of date and time
+parsing. This module was inspired by and conceived in honor of Iain's work.
 
 Tom Phoenix (PHOENIX) and PDX.pm for helping me solve the ISO week conversion
-bug. Not by fixing the code but motivation me to fix it so I could
-participate in a game of C<Zendo>.
+bug. Not by fixing the code but motivation me to fix it so I could participate
+in a game of C<Zendo>.
 
 Jonathan Leffler (JOHNL) for reporting a test bug.
 
