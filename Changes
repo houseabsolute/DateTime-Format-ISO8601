@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.16     2021-02-14
+
 - Add support for YYYYMMDDThhmm[+-]hhmm and YYYY-MM-DDThh:mm+hh:mm
   formats. Based on GH #13 from lbjw.
 
