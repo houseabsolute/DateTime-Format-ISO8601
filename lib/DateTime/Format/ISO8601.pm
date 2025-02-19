@@ -1001,7 +1001,7 @@ sub _fractional_second {
     my %p = @_;
 
     ## no critic (ValuesAndExpressions::ProhibitMismatchedOperators)
-    $p{parsed}{nanosecond} = ".$p{ parsed }{ nanosecond }" * 10**9;
+    $p{parsed}{nanosecond} = int( ".$p{ parsed }{ nanosecond }" * 10**9 );
 
     return 1;
 }
