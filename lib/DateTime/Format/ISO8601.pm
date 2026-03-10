@@ -1000,8 +1000,14 @@ sub _base_dt {
 sub _fractional_second {
     my %p = @_;
 
-    ## no critic (ValuesAndExpressions::ProhibitMismatchedOperators)
-    $p{parsed}{nanosecond} = int( ".$p{ parsed }{ nanosecond }" * 10**9 );
+    my $len = length( $p{parsed}{nanosecond} );
+    $p{parsed}{nanosecond}
+        = $p{parsed}{nanosecond} . ( '0' x ( $len >= 9 ? 0 : 9 - $len ) );
+
+    # substr knowingly truncates sub-nanosecond values
+    $p{parsed}{nanosecond} = substr( $p{parsed}{nanosecond}, 0, 9 );
+
+    $p{parsed}{nanosecond} = int( $p{parsed}{nanosecond} );
 
     return 1;
 }
@@ -1270,6 +1276,8 @@ object.
 =item * Fractional time
 
 There is no limit on the expressed precision.
+
+B<Note:> sub-nanosecond times are truncated.
 
 =back
 
